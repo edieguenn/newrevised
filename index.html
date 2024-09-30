@@ -6,6 +6,7 @@
     <title>Rabbit Cage</title>
     <style>
         .hidden { display: none; }
+        .buttons { margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -93,7 +94,7 @@
                 <button type="submit">SUBMIT</button>
                 <button type="button" onclick="goHome()">CANCEL</button>
                 <button type="button" onclick="deleteCage()">DELETE CAGE</button>
-                <button type="button" onclick="clearForm()">CLEAR FORM</button> <!-- Clear Form Button -->
+                <button type="button" onclick="clearForm()">CLEAR FORM</button>
             </div>
         </form>
     </div>
@@ -111,6 +112,10 @@
         document.getElementById('cageDetails').style.display = 'none';
         resetDynamicFields();
         updateCageList();
+    }
+
+    function goToRabbitProfile() {
+        // Logic for navigating to rabbit profile (not yet implemented)
     }
 
     function handleProfileChange() {
@@ -163,7 +168,94 @@
         document.getElementById('breederNotice').classList.add('hidden');
     }
 
-    // Additional functions (addNewCage, deleteCage, updateCageList, etc.) remain unchanged
+    function saveData(event) {
+        event.preventDefault();
+
+        const formData = new FormData(document.getElementById('rabbitForm'));
+        const cageData = Object.fromEntries(formData.entries());
+        const cageId = cageData.serialNumber;
+
+        cages[cageId] = cageData;
+        localStorage.setItem('cages', JSON.stringify(cages));
+
+        alert('Data saved successfully!');
+        clearForm();
+        goHome();
+    }
+
+    function deleteCage() {
+        const cageId = prompt('Enter the serial number of the cage to delete:');
+        if (cages[cageId]) {
+            delete cages[cageId];
+            localStorage.setItem('cages', JSON.stringify(cages));
+            alert('Cage deleted successfully!');
+            goHome();
+        } else {
+            alert('Cage not found!');
+        }
+    }
+
+    function clearForm() {
+        document.getElementById('rabbitForm').reset();
+        resetDynamicFields();
+    }
+
+    function updateCageList() {
+        const cageButtonsDiv = document.getElementById('cageButtons');
+        cageButtonsDiv.innerHTML = '';
+
+        for (const [cageId, cageData] of Object.entries(cages)) {
+            const button = document.createElement('button');
+            button.innerText = `Cage: ${cageId}`;
+            button.onclick = () => loadCageDetails(cageId);
+            cageButtonsDiv.appendChild(button);
+        }
+    }
+
+    function loadCageDetails(cageId) {
+        const cageData = cages[cageId];
+        if (!cageData) {
+            alert('Cage not found!');
+            return;
+        }
+
+        document.getElementById('serialNumber').value = cageData.serialNumber;
+        document.getElementById('breed').value = cageData.breed;
+        document.getElementById('birthDate').value = cageData.birthDate;
+        document.getElementById('family').value = cageData.family;
+        document.getElementById('weight').value = cageData.weight;
+        document.getElementById('note').value = cageData.note;
+        document.getElementById('profile').value = cageData.profile;
+
+        handleProfileChange();
+
+        if (cageData.gender) {
+            document.querySelector(`input[name="gender"][value="${cageData.gender}"]`).checked = true;
+            togglePregnancy(cageData.gender === 'female');
+        }
+
+        if (cageData.pregnant) {
+            document.querySelector(`input[name="pregnant"][value="${cageData.pregnant}"]`).checked = true;
+            togglePregnancyDetails(cageData.pregnant === 'yes');
+        }
+
+        if (cageData.pregnancyStart) {
+            document.getElementById('pregnancyStart').value = cageData.pregnancyStart;
+            calculateDueDate();
+        }
+
+        document.getElementById('cageDetails').style.display = 'block';
+        document.getElementById('homePage').style.display = 'none';
+    }
+
+    function addNewCage() {
+        clearForm();
+        document.getElementById('cageDetails').style.display = 'block';
+        document.getElementById('homePage').style.display = 'none';
+    }
+
+    // Initialize cage list on page load
+    updateCageList();
 </script>
 </body>
 </html>
