@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rabbit Cage</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <button onclick="goHome()">&#x1F3E0;</button> 
+        <span id="headerTitle">Rabbit Profile</span>
+    </header>
+
+    <!-- Profile Selection Section -->
+    <div id="profilePage">
+        <h2>Select or Add Rabbit Profile</h2>
+        <div id="profileButtons"></div> <!-- Dynamically generated profile buttons -->
+        <button onclick="addNewProfile()">ADD NEW PROFILE</button>
+    </div>
+
+    <!-- Rabbit Info Editing Form -->
+    <div id="cageDetails" style="display: none;">
+        <form id="rabbitForm" onsubmit="saveData(event)">
+            <div>
+                <label for="serialNumber">SERIAL NUMBER:</label>
+                <input type="text" id="serialNumber" name="serialNumber" required>
+            </div>
+            <!-- Rest of the form fields remain the same -->
+            <!-- ... -->
+            <div class="buttons">
+                <button type="submit">SUBMIT</button>
+                <button type="button" onclick="goHome()">CANCEL</button>
+                <button type="button" onclick="deleteProfile()">DELETE PROFILE</button>
+                <button type="button" onclick="clearForm()">CLEAR FORM</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let profiles = JSON.parse(localStorage.getItem('profiles')) || {}; // Store rabbit profiles
+
+        // Display the profile selection screen
+        function goHome() {
+            document.getElementById('profilePage').style.display = 'block';
+            document.getElementById('cageDetails').style.display = 'none';
+            document.getElementById('headerTitle').innerHTML = 'Rabbit Profile';
+            updateProfileList();
+        }
+
+        // Add a new profile
+        function addNewProfile() {
+            let newProfileId = 1;
+            while (profiles[newProfileId] !== undefined) {
+                newProfileId++;
+            }
+            profiles[newProfileId] = {};
+            localStorage.setItem('profiles', JSON.stringify(profiles));
+            updateProfileList();
+            showProfileDetails(newProfileId); // Show form to edit the new profile
+        }
+
+        // Show the rabbit information form for a selected profile
+        function showProfileDetails(profileId) {
+            document.getElementById('profilePage').style.display = 'none';
+            document.getElementById('cageDetails').style.display = 'block';
+            loadData(profileId);
+            document.getElementById('rabbitForm').dataset.profileId = profileId;
+            document.getElementById('headerTitle').innerHTML = `Profile ${profileId}`;
+        }
+
+        // Update the profile list on the profile selection screen
+        function updateProfileList() {
+            const profileButtonsDiv = document.getElementById('profileButtons');
+            profileButtonsDiv.innerHTML = ''; // Clear existing buttons
+            Object.keys(profiles).forEach(profileId => {
+                const button = document.createElement('button');
+                button.innerHTML = `Profile ${profileId}`;
+                button.onclick = () => showProfileDetails(profileId);
+                profileButtonsDiv.appendChild(button);
+            });
+        }
+
+        // Save the rabbit data for the selected profile
+        function saveData(event) {
+            event.preventDefault();
+            const form = document.getElementById('rabbitForm');
+            const profileId = form.dataset.profileId;
+            const data = new FormData(form);
+            const obj = {};
+            data.forEach((value, key) => {
+                obj[key] = value;
+            });
+            localStorage.setItem(`rabbitData${profileId}`, JSON.stringify(obj));
+            alert('Data saved successfully!');
+            goHome(); // Return to profile selection screen after saving
+        }
+
+        // Load the rabbit data into the form for the selected profile
+        function loadData(profileId) {
+            let data = JSON.parse(localStorage.getItem(`rabbitData${profileId}`)) || {};
+            document.getElementById('serialNumber').value = data.serialNumber || '';
+            document.getElementById('breed').value = data.breed || '';
+            // Rest of the form fields...
+        }
+
+        // Delete the current profile
+        function deleteProfile() {
+            const profileId = document.getElementById('rabbitForm').dataset.profileId;
+            if (confirm(`Are you sure you want to delete Profile ${profileId}?`)) {
+                delete profiles[profileId];
+                localStorage.setItem('profiles', JSON.stringify(profiles));
+                alert(`Profile ${profileId} deleted successfully!`);
+                goHome();
+            }
+        }
+
+        // Clear the form fields
+        function clearForm() {
+            document.getElementById('rabbitForm').reset();
+        }
+
+        // Initialize the app by showing the profile page first
+        window.onload = goHome;
+    </script>
+</body>
+</html>
