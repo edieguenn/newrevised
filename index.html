@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rabbit Cage</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        .hidden { display: none; }
+    </style>
 </head>
 <body>
     <header>
@@ -47,40 +49,36 @@
                 <label for="weight">WEIGHT:</label>
                 <input type="text" id="weight" name="weight">
             </div>
-            <div>
-                <label for="foodIntake">FOOD INTAKE:</label>
-                <label><input type="radio" name="foodIntake" value="regular"> REGULAR</label>
-                <label><input type="radio" name="foodIntake" value="irregular"> IRREGULAR</label>
-            </div>
 
-            <!-- Gender -->
-            <div id="genderField" style="display: none;">
+            <!-- Dynamic Sections -->
+
+            <!-- Rabbit Doe (Pregnancy Details) -->
+            <div id="genderField" class="hidden">
                 <label for="gender">GENDER:</label>
                 <label><input type="radio" name="gender" value="male" onclick="togglePregnancy(false)"> MALE</label>
                 <label><input type="radio" name="gender" value="female" onclick="togglePregnancy(true)"> FEMALE</label>
             </div>
 
-            <!-- Rabbit Doe Specific Fields -->
-            <div id="pregnancyOption" style="display: none;">
+            <div id="pregnancyOption" class="hidden">
                 <label>PREGNANT:</label>
                 <label><input type="radio" name="pregnant" value="yes" onclick="togglePregnancyDetails(true)"> YES</label>
                 <label><input type="radio" name="pregnant" value="no" onclick="togglePregnancyDetails(false)"> NO</label>
             </div>
 
-            <div id="pregnancyDetails" style="display: none;">
+            <div id="pregnancyDetails" class="hidden">
                 <label for="pregnancyStart">START OF PREGNANCY:</label>
                 <input type="date" id="pregnancyStart" name="pregnancyStart" onchange="calculateDueDate()">
                 <label for="dueDate">DUE DATE:</label>
                 <input type="date" id="dueDate" name="dueDate" readonly>
             </div>
 
-            <!-- Rabbit Fattener Specific Field -->
-            <div id="fattenerNotice" style="display: none;">
+            <!-- Fattener Specific -->
+            <div id="fattenerNotice" class="hidden">
                 <strong>The rabbit is ready for meat production.</strong>
             </div>
 
-            <!-- Rabbit Breeder Specific Field -->
-            <div id="breederNotice" style="display: none;">
+            <!-- Breeder Specific -->
+            <div id="breederNotice" class="hidden">
                 <strong>The rabbit is eligible for mating.</strong>
             </div>
 
@@ -100,7 +98,7 @@
         </form>
     </div>
 
-    <div id="homePage" class="cage-list" style="display: none;">
+    <div id="homePage" class="cage-list hidden">
         <div id="cageButtons"></div>
         <button onclick="addNewCage()">ADD NEW CAGE</button>
     </div>
@@ -120,7 +118,7 @@
         resetDynamicFields();
 
         if (profile === 'doe') {
-            document.getElementById('genderField').style.display = 'block';
+            document.getElementById('genderField').classList.remove('hidden');
         } else if (profile === 'fattener') {
             checkAge();
         } else if (profile === 'breeder') {
@@ -132,21 +130,22 @@
         const birthDate = new Date(document.getElementById('birthDate').value);
         const today = new Date();
         const ageInWeeks = Math.floor((today - birthDate) / (7 * 24 * 60 * 60 * 1000));
+        const ageInMonths = Math.floor((today - birthDate) / (30 * 24 * 60 * 60 * 1000));
 
         const profile = document.getElementById('profile').value;
         if (profile === 'fattener' && ageInWeeks >= 12) {
-            document.getElementById('fattenerNotice').style.display = 'block';
-        } else if (profile === 'breeder' && ageInWeeks >= 26) {
-            document.getElementById('breederNotice').style.display = 'block';
+            document.getElementById('fattenerNotice').classList.remove('hidden');
+        } else if (profile === 'breeder' && ageInMonths >= 6) {
+            document.getElementById('breederNotice').classList.remove('hidden');
         }
     }
 
     function togglePregnancy(show) {
-        document.getElementById('pregnancyOption').style.display = show ? 'block' : 'none';
+        document.getElementById('pregnancyOption').classList.toggle('hidden', !show);
     }
 
     function togglePregnancyDetails(show) {
-        document.getElementById('pregnancyDetails').style.display = show ? 'block' : 'none';
+        document.getElementById('pregnancyDetails').classList.toggle('hidden', !show);
     }
 
     function calculateDueDate() {
@@ -156,26 +155,12 @@
         document.getElementById('dueDate').value = dueDate.toISOString().substr(0, 10);
     }
 
-    function saveData(event) {
-        event.preventDefault();
-        const form = document.getElementById('rabbitForm');
-        const cageNumber = form.dataset.cageNumber;
-        const data = new FormData(form);
-        const obj = {};
-        data.forEach((value, key) => {
-            obj[key] = value;
-        });
-        localStorage.setItem(`rabbitData${cageNumber}`, JSON.stringify(obj));
-        alert('Data saved successfully!');
-        goHome();
-    }
-
     function resetDynamicFields() {
-        document.getElementById('genderField').style.display = 'none';
-        document.getElementById('pregnancyOption').style.display = 'none';
-        document.getElementById('pregnancyDetails').style.display = 'none';
-        document.getElementById('fattenerNotice').style.display = 'none';
-        document.getElementById('breederNotice').style.display = 'none';
+        document.getElementById('genderField').classList.add('hidden');
+        document.getElementById('pregnancyOption').classList.add('hidden');
+        document.getElementById('pregnancyDetails').classList.add('hidden');
+        document.getElementById('fattenerNotice').classList.add('hidden');
+        document.getElementById('breederNotice').classList.add('hidden');
     }
 
     // Additional functions (addNewCage, deleteCage, updateCageList, etc.) remain unchanged
