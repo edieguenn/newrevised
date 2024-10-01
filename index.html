@@ -51,17 +51,16 @@
                 </div>
                 <div id="pregnancyDetails" style="display: none;">
                     <div>
-                        <label for="matedRabbit">MATED RABBIT:</label>
-                        <input type="text" id="matedRabbit" name="matedRabbit">
-                    </div>
-                    <div>
                         <label for="pregnancyStart">START OF PREGNANCY:</label>
-                        <input type="date" id="pregnancyStart" name="pregnancyStart">
+                        <input type="date" id="pregnancyStart" name="pregnancyStart" onchange="calculateDueDate()">
                     </div>
                     <div>
                         <label for="dueDate">DUE DATE OF PREGNANCY:</label>
-                        <input type="date" id="dueDate" name="dueDate">
+                        <input type="text" id="dueDate" name="dueDate" readonly>
                     </div>
+                </div>
+                <div id="notReadyMessage" style="display: none;">
+                    <p>This rabbit is not ready for pregnancy.</p>
                 </div>
             </div>
 
@@ -105,6 +104,7 @@
             document.getElementById('homePage').style.display = 'block';
             document.getElementById('cageDetails').style.display = 'none';
             document.getElementById('pregnancyDetails').style.display = 'none';
+            document.getElementById('notReadyMessage').style.display = 'none';
         }
 
         function showCageDetails(cageNumber) {
@@ -116,6 +116,7 @@
 
         function togglePregnancyDetails(show) {
             document.getElementById('pregnancyDetails').style.display = show ? 'block' : 'none';
+            document.getElementById('notReadyMessage').style.display = !show ? 'block' : 'none';
         }
 
         function toggleProfileFields() {
@@ -123,6 +124,15 @@
             document.getElementById('pregnantSection').style.display = profile === 'doe' ? 'block' : 'none';
             document.getElementById('fattenerSection').style.display = profile === 'fattener' ? 'block' : 'none';
             document.getElementById('breederSection').style.display = profile === 'breeder' ? 'block' : 'none';
+        }
+
+        function calculateDueDate() {
+            const pregnancyStart = document.getElementById('pregnancyStart').value;
+            if (pregnancyStart) {
+                const startDate = new Date(pregnancyStart);
+                startDate.setDate(startDate.getDate() + 30); // Add 30 days for due date
+                document.getElementById('dueDate').value = startDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+            }
         }
 
         function saveData(event) {
@@ -146,7 +156,7 @@
                     const field = form.elements[key];
                     if (field) {
                         if (field.type === 'radio') {
-                            form.elements[key].value = data[key];
+                            field.value = data[key];
                             if (data[key] === "yes") {
                                 field.checked = true;
                                 togglePregnancyDetails(true);
