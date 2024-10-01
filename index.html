@@ -35,6 +35,10 @@
                     <input type="text" id="age" name="age">
                 </div>
                 <div>
+                    <label for="dateOfBirth">DATE OF BIRTH:</label>
+                    <input type="date" id="dateOfBirth" name="dateOfBirth">
+                </div>
+                <div>
                     <label for="gender">GENDER:</label>
                     <select id="gender" name="gender">
                         <option value="male">Male</option>
@@ -152,23 +156,6 @@
                 const startDate = new Date(pregnancyStart);
                 startDate.setDate(startDate.getDate() + 30); // Add 30 days for due date
                 document.getElementById(dueDateId).value = startDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
-            }
-        }
-
-        function checkReadinessForFattener() {
-            const birthDateFattener = document.getElementById('birthDateFattener').value;
-            if (birthDateFattener) {
-                const birthDateObj = new Date(birthDateFattener);
-                const today = new Date();
-                const diffInWeeks = Math.floor((today - birthDateObj) / (1000 * 60 * 60 * 24 * 7));
-
-                if (diffInWeeks >= 12) {
-                    document.getElementById('readyForMeat').style.display = 'block';
-                    document.getElementById('notReadyForMeat').style.display = 'none';
-                } else {
-                    document.getElementById('readyForMeat').style.display = 'none';
-                    document.getElementById('notReadyForMeat').style.display = 'block';
-                }
             }
         }
 
