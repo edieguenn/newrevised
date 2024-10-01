@@ -14,6 +14,17 @@
 
     <div id="cageDetails">
         <form id="rabbitForm" onsubmit="saveData(event)">
+            <!-- Profile Selector -->
+            <div>
+                <label for="profile">RABBIT PROFILE:</label>
+                <select id="profile" name="profile" onchange="toggleProfileFields()">
+                    <option value="doe">Rabbit Doe</option>
+                    <option value="fattener">Rabbit Fattener</option>
+                    <option value="breeder">Rabbit Breeder</option>
+                </select>
+            </div>
+
+            <!-- Common Fields -->
             <div>
                 <label for="breed">BREED:</label>
                 <input type="text" id="breed" name="breed">
@@ -30,35 +41,47 @@
                 <label for="weight">WEIGHT:</label>
                 <input type="text" id="weight" name="weight">
             </div>
-            <div>
-                <label>PREGNANT:</label>
-                <label><input type="radio" name="pregnant" value="yes" onclick="togglePregnancyDetails(true)"> YES</label>
-                <label><input type="radio" name="pregnant" value="no" onclick="togglePregnancyDetails(false)"> NO</label>
-            </div>
-            <div id="pregnancyDetails" style="display: none;">
+
+            <!-- Rabbit Doe Fields (Pregnancy related) -->
+            <div id="pregnantSection" style="display: none;">
                 <div>
-                    <label for="matedRabbit">MATED RABBIT:</label>
-                    <input type="text" id="matedRabbit" name="matedRabbit">
+                    <label>PREGNANT:</label>
+                    <label><input type="radio" name="pregnant" value="yes" onclick="togglePregnancyDetails(true)"> YES</label>
+                    <label><input type="radio" name="pregnant" value="no" onclick="togglePregnancyDetails(false)"> NO</label>
                 </div>
+                <div id="pregnancyDetails" style="display: none;">
+                    <div>
+                        <label for="matedRabbit">MATED RABBIT:</label>
+                        <input type="text" id="matedRabbit" name="matedRabbit">
+                    </div>
+                    <div>
+                        <label for="pregnancyStart">START OF PREGNANCY:</label>
+                        <input type="date" id="pregnancyStart" name="pregnancyStart">
+                    </div>
+                    <div>
+                        <label for="dueDate">DUE DATE OF PREGNANCY:</label>
+                        <input type="date" id="dueDate" name="dueDate">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rabbit Fattener and Breeder Fields -->
+            <div id="fattenerSection" style="display: none;">
                 <div>
-                    <label for="pregnancyStart">START OF PREGNANCY:</label>
-                    <input type="date" id="pregnancyStart" name="pregnancyStart">
+                    <label for="foodIntake">FOOD INTAKE:</label>
+                    <label><input type="radio" name="foodIntake" value="normal"> NORMAL</label>
+                    <label><input type="radio" name="foodIntake" value="irregular"> IRREGULAR</label>
                 </div>
+            </div>
+
+            <div id="breederSection" style="display: none;">
                 <div>
-                    <label for="dueDate">DUE DATE OF PREGNANCY:</label>
-                    <input type="date" id="dueDate" name="dueDate">
+                    <label>ELIGIBLE FOR MATING:</label>
+                    <label><input type="radio" name="mating" value="yes"> YES</label>
+                    <label><input type="radio" name="mating" value="no"> NO</label>
                 </div>
             </div>
-            <div>
-                <label for="foodIntake">FOOD INTAKE:</label>
-                <label><input type="radio" name="foodIntake" value="normal"> NORMAL</label>
-                <label><input type="radio" name="foodIntake" value="irregular"> IRREGULAR</label>
-            </div>
-            <div>
-                <label>ELIGIBLE FOR MATING:</label>
-                <label><input type="radio" name="mating" value="yes"> YES</label>
-                <label><input type="radio" name="mating" value="no"> NO</label>
-            </div>
+
             <div>
                 <label for="note">NOTE:</label>
                 <textarea id="note" name="note"></textarea>
@@ -88,12 +111,18 @@
             document.getElementById('homePage').style.display = 'none';
             document.getElementById('cageDetails').style.display = 'block';
             loadData(cageNumber);
-            // Store the current cage number
             document.getElementById('rabbitForm').dataset.cageNumber = cageNumber;
         }
 
         function togglePregnancyDetails(show) {
             document.getElementById('pregnancyDetails').style.display = show ? 'block' : 'none';
+        }
+
+        function toggleProfileFields() {
+            const profile = document.getElementById('profile').value;
+            document.getElementById('pregnantSection').style.display = profile === 'doe' ? 'block' : 'none';
+            document.getElementById('fattenerSection').style.display = profile === 'fattener' ? 'block' : 'none';
+            document.getElementById('breederSection').style.display = profile === 'breeder' ? 'block' : 'none';
         }
 
         function saveData(event) {
@@ -130,11 +159,17 @@
                         }
                     }
                 });
+                document.getElementById('profile').value = data['profile'] || 'doe';
+                toggleProfileFields();
             } else {
                 form.reset();
                 togglePregnancyDetails(false);
+                toggleProfileFields();
             }
         }
+
+        // Initialize form fields based on the selected profile on load
+        document.addEventListener('DOMContentLoaded', toggleProfileFields);
     </script>
 </body>
 </html>
