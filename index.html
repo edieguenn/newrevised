@@ -24,63 +24,60 @@
                 </select>
             </div>
 
-            <!-- Common Fields -->
-            <div>
-                <label for="breed">BREED:</label>
-                <input type="text" id="breed" name="breed">
-            </div>
-            <div>
-                <label for="family">FAMILY:</label>
-                <input type="text" id="family" name="family">
-            </div>
-
-            <!-- Separate Date of Birth Fields for Each Profile -->
-            <div id="doeBirthDate" class="birthDateField" style="display: none;">
-                <label for="birthDateDoe">DATE OF BIRTH:</label>
-                <input type="date" id="birthDateDoe" name="birthDateDoe" onchange="checkReadinessForFattener()">
-            </div>
-
-            <div id="fattenerBirthDate" class="birthDateField" style="display: none;">
-                <label for="birthDateFattener">DATE OF BIRTH:</label>
-                <input type="date" id="birthDateFattener" name="birthDateFattener" onchange="checkReadinessForFattener()">
-            </div>
-
-            <div id="breederBirthDate" class="birthDateField" style="display: none;">
-                <label for="birthDateBreeder">DATE OF BIRTH:</label>
-                <input type="date" id="birthDateBreeder" name="birthDateBreeder">
-            </div>
-
-            <div>
-                <label for="weight">WEIGHT:</label>
-                <input type="text" id="weight" name="weight">
-            </div>
-
-            <!-- Rabbit Doe Fields (Pregnancy related) -->
-            <div id="pregnantSection" style="display: none;">
+            <!-- Rabbit Doe Fields -->
+            <div id="doeFields" style="display: none;">
                 <div>
+                    <label for="serialNumber">SERIAL NUMBER:</label>
+                    <input type="text" id="serialNumber" name="serialNumber">
+                </div>
+                <div>
+                    <label for="age">AGE:</label>
+                    <input type="text" id="age" name="age">
+                </div>
+                <div>
+                    <label for="gender">GENDER:</label>
+                    <select id="gender" name="gender">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="family">RABBIT FAMILY:</label>
+                    <input type="text" id="family" name="family">
+                </div>
+                <div>
+                    <label for="foodIntake">FOOD INTAKE:</label>
+                    <label><input type="radio" name="foodIntakeDoe" value="normal"> NORMAL</label>
+                    <label><input type="radio" name="foodIntakeDoe" value="irregular"> IRREGULAR</label>
+                </div>
+                <div>
+                    <label for="weight">WEIGHT:</label>
+                    <input type="text" id="weight" name="weight">
+                </div>
+                <div id="pregnantSection" style="display: none;">
                     <label>PREGNANT:</label>
                     <label><input type="radio" name="pregnantDoe" value="yes" onclick="togglePregnancyDetails(true)"> YES</label>
                     <label><input type="radio" name="pregnantDoe" value="no" onclick="togglePregnancyDetails(false)"> NO</label>
-                </div>
-                <div id="pregnancyDetails" style="display: none;">
-                    <div>
-                        <label for="pregnancyStartDoe">START OF PREGNANCY:</label>
-                        <input type="date" id="pregnancyStartDoe" name="pregnancyStartDoe" onchange="calculateDueDate('Doe')">
+                    <div id="pregnancyDetails" style="display: none;">
+                        <div>
+                            <label for="pregnancyStartDoe">START OF PREGNANCY:</label>
+                            <input type="date" id="pregnancyStartDoe" name="pregnancyStartDoe" onchange="calculateDueDate('Doe')">
+                        </div>
+                        <div>
+                            <label for="dueDateDoe">DUE DATE OF PREGNANCY:</label>
+                            <input type="text" id="dueDateDoe" name="dueDateDoe" readonly>
+                        </div>
                     </div>
-                    <div>
-                        <label for="dueDateDoe">DUE DATE OF PREGNANCY:</label>
-                        <input type="text" id="dueDateDoe" name="dueDateDoe" readonly>
+                    <div id="notReadyMessage" style="display: none;">
+                        <p>This rabbit is not ready for pregnancy.</p>
                     </div>
-                </div>
-                <div id="notReadyMessage" style="display: none;">
-                    <p>This rabbit is not ready for pregnancy.</p>
                 </div>
             </div>
 
             <!-- Rabbit Fattener Section -->
             <div id="fattenerSection" style="display: none;">
                 <div>
-                    <label for="foodIntake">FOOD INTAKE:</label>
+                    <label for="foodIntakeFattener">FOOD INTAKE:</label>
                     <label><input type="radio" name="foodIntakeFattener" value="normal"> NORMAL</label>
                     <label><input type="radio" name="foodIntakeFattener" value="irregular"> IRREGULAR</label>
                 </div>
@@ -141,14 +138,9 @@
 
         function toggleProfileFields() {
             const profile = document.getElementById('profile').value;
-            document.getElementById('pregnantSection').style.display = profile === 'doe' ? 'block' : 'none';
+            document.getElementById('doeFields').style.display = profile === 'doe' ? 'block' : 'none';
             document.getElementById('fattenerSection').style.display = profile === 'fattener' ? 'block' : 'none';
             document.getElementById('breederSection').style.display = profile === 'breeder' ? 'block' : 'none';
-
-            // Show the correct date of birth field based on the profile
-            document.getElementById('doeBirthDate').style.display = profile === 'doe' ? 'block' : 'none';
-            document.getElementById('fattenerBirthDate').style.display = profile === 'fattener' ? 'block' : 'none';
-            document.getElementById('breederBirthDate').style.display = profile === 'breeder' ? 'block' : 'none';
         }
 
         function calculateDueDate(profileType) {
@@ -213,6 +205,11 @@
                     }
                 });
                 toggleProfileFields();  // Update the visible fields based on the loaded profile
+                if (data['profile'] === 'doe' && data['pregnantDoe'] === 'yes') {
+                    togglePregnancyDetails(true);
+                } else {
+                    togglePregnancyDetails(false);
+                }
             } else {
                 form.reset();
             }
