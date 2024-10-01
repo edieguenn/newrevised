@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rabbit Cage Management</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        .hidden { display: none; }
+        .highlight { font-weight: bold; border: 2px solid black; padding: 5px; }
+    </style>
 </head>
 <body>
     <header>
@@ -25,19 +29,10 @@
             </div>
 
             <!-- Rabbit Doe Fields -->
-            <div id="doeFields" style="display: none;">
-                <div>
-                    <label for="serialNumber">SERIAL NUMBER:</label>
-                    <input type="text" id="serialNumber" name="serialNumber">
-                </div>
-                <div>
-                    <label for="age">AGE:</label>
-                    <input type="text" id="age" name="age">
-                </div>
-                <div>
-                    <label for="dateOfBirth">DATE OF BIRTH:</label>
-                    <input type="date" id="dateOfBirth" name="dateOfBirth">
-                </div>
+            <div id="doeFields" class="hidden">
+                <div><label for="serialNumber">SERIAL NUMBER:</label><input type="text" id="serialNumber" name="serialNumber"></div>
+                <div><label for="age">AGE:</label><input type="text" id="age" name="age"></div>
+                <div><label for="dateOfBirth">DATE OF BIRTH:</label><input type="date" id="dateOfBirth" name="dateOfBirth"></div>
                 <div>
                     <label for="gender">GENDER:</label>
                     <select id="gender" name="gender">
@@ -45,56 +40,44 @@
                         <option value="female">Female</option>
                     </select>
                 </div>
-                <div>
-                    <label for="family">RABBIT FAMILY:</label>
-                    <input type="text" id="family" name="family">
-                </div>
+                <div><label for="family">RABBIT FAMILY:</label><input type="text" id="family" name="family"></div>
                 <div>
                     <label for="foodIntake">FOOD INTAKE:</label>
                     <label><input type="radio" name="foodIntakeDoe" value="normal"> NORMAL</label>
                     <label><input type="radio" name="foodIntakeDoe" value="irregular"> IRREGULAR</label>
                 </div>
-                <div>
-                    <label for="weight">WEIGHT:</label>
-                    <input type="text" id="weight" name="weight">
-                </div>
-                <div id="pregnantSection" style="display: none;">
+                <div><label for="weight">WEIGHT:</label><input type="text" id="weight" name="weight"></div>
+                <div id="pregnantSection" class="hidden">
                     <label>PREGNANT:</label>
                     <label><input type="radio" name="pregnantDoe" value="yes" onclick="togglePregnancyDetails(true)"> YES</label>
                     <label><input type="radio" name="pregnantDoe" value="no" onclick="togglePregnancyDetails(false)"> NO</label>
-                    <div id="pregnancyDetails" style="display: none;">
-                        <div>
-                            <label for="pregnancyStartDoe">START OF PREGNANCY:</label>
-                            <input type="date" id="pregnancyStartDoe" name="pregnancyStartDoe" onchange="calculateDueDate('Doe')">
-                        </div>
-                        <div>
-                            <label for="dueDateDoe">DUE DATE OF PREGNANCY:</label>
-                            <input type="text" id="dueDateDoe" name="dueDateDoe" readonly>
-                        </div>
+                    <div id="pregnancyDetails" class="hidden">
+                        <div><label for="pregnancyStartDoe">START OF PREGNANCY:</label><input type="date" id="pregnancyStartDoe" name="pregnancyStartDoe" onchange="calculateDueDate('Doe')"></div>
+                        <div><label for="dueDateDoe">DUE DATE OF PREGNANCY:</label><input type="text" id="dueDateDoe" name="dueDateDoe" readonly></div>
                     </div>
-                    <div id="notReadyMessage" style="display: none;">
+                    <div id="notReadyMessage" class="hidden">
                         <p>This rabbit is not ready for pregnancy.</p>
                     </div>
                 </div>
             </div>
 
             <!-- Rabbit Fattener Section -->
-            <div id="fattenerSection" style="display: none;">
+            <div id="fattenerSection" class="hidden">
                 <div>
                     <label for="foodIntakeFattener">FOOD INTAKE:</label>
                     <label><input type="radio" name="foodIntakeFattener" value="normal"> NORMAL</label>
                     <label><input type="radio" name="foodIntakeFattener" value="irregular"> IRREGULAR</label>
                 </div>
-                <div id="readyForMeat" style="display: none;">
+                <div id="readyForMeat" class="hidden">
                     <p>This rabbit is ready for meat production.</p>
                 </div>
-                <div id="notReadyForMeat" style="display: none;">
-                    <p style="font-weight: bold; border: 2px solid black; padding: 5px;">This rabbit is not ready for meat production.</p>
+                <div id="notReadyForMeat" class="hidden">
+                    <p class="highlight">This rabbit is not ready for meat production.</p>
                 </div>
             </div>
 
             <!-- Rabbit Breeder Section -->
-            <div id="breederSection" style="display: none;">
+            <div id="breederSection" class="hidden">
                 <div>
                     <label>ELIGIBLE FOR MATING:</label>
                     <label><input type="radio" name="matingBreeder" value="yes"> YES</label>
@@ -113,7 +96,7 @@
         </form>
     </div>
 
-    <div id="homePage" class="cage-list" style="display: none;">
+    <div id="homePage" class="cage-list hidden">
         <button onclick="showCageDetails(1)">CAGE 1</button>
         <button onclick="showCageDetails(2)">CAGE 2</button>
         <button onclick="showCageDetails(3)">CAGE 3</button>
@@ -121,36 +104,50 @@
     </div>
 
     <script>
+        const elements = {
+            homePage: document.getElementById('homePage'),
+            cageDetails: document.getElementById('cageDetails'),
+            rabbitForm: document.getElementById('rabbitForm'),
+            profileSelect: document.getElementById('profile'),
+            pregnancyDetails: document.getElementById('pregnancyDetails'),
+            notReadyMessage: document.getElementById('notReadyMessage'),
+            doeFields: document.getElementById('doeFields'),
+            fattenerSection: document.getElementById('fattenerSection'),
+            breederSection: document.getElementById('breederSection'),
+            readyForMeat: document.getElementById('readyForMeat'),
+            notReadyForMeat: document.getElementById('notReadyForMeat')
+        };
+
         function goHome() {
-            document.getElementById('homePage').style.display = 'block';
-            document.getElementById('cageDetails').style.display = 'none';
+            elements.homePage.classList.remove('hidden');
+            elements.cageDetails.classList.add('hidden');
             resetFields();
         }
 
         function showCageDetails(cageNumber) {
-            document.getElementById('homePage').style.display = 'none';
-            document.getElementById('cageDetails').style.display = 'block';
+            elements.homePage.classList.add('hidden');
+            elements.cageDetails.classList.remove('hidden');
             loadData(cageNumber);
-            document.getElementById('rabbitForm').dataset.cageNumber = cageNumber;
+            elements.rabbitForm.dataset.cageNumber = cageNumber;
         }
 
         function togglePregnancyDetails(show) {
-            document.getElementById('pregnancyDetails').style.display = show ? 'block' : 'none';
-            document.getElementById('notReadyMessage').style.display = !show ? 'block' : 'none';
+            elements.pregnancyDetails.classList.toggle('hidden', !show);
+            elements.notReadyMessage.classList.toggle('hidden', show);
         }
 
         function toggleProfileFields() {
-            const profile = document.getElementById('profile').value;
-            document.getElementById('doeFields').style.display = profile === 'doe' ? 'block' : 'none';
-            document.getElementById('fattenerSection').style.display = profile === 'fattener' ? 'block' : 'none';
-            document.getElementById('breederSection').style.display = profile === 'breeder' ? 'block' : 'none';
+            const profile = elements.profileSelect.value;
+            elements.doeFields.classList.toggle('hidden', profile !== 'doe');
+            elements.fattenerSection.classList.toggle('hidden', profile !== 'fattener');
+            elements.breederSection.classList.toggle('hidden', profile !== 'breeder');
         }
 
         function calculateDueDate(profileType) {
-            let pregnancyStartId = `pregnancyStart${profileType}`;
-            let dueDateId = `dueDate${profileType}`;
-            
+            const pregnancyStartId = `pregnancyStart${profileType}`;
+            const dueDateId = `dueDate${profileType}`;
             const pregnancyStart = document.getElementById(pregnancyStartId).value;
+
             if (pregnancyStart) {
                 const startDate = new Date(pregnancyStart);
                 startDate.setDate(startDate.getDate() + 30); // Add 30 days for due date
@@ -159,57 +156,42 @@
         }
 
         function resetFields() {
-            const form = document.getElementById('rabbitForm');
-            form.reset();
+            elements.rabbitForm.reset();
             toggleProfileFields(); // Reset visibility of profile fields
-            document.getElementById('pregnancyDetails').style.display = 'none';
-            document.getElementById('notReadyMessage').style.display = 'none';
+            elements.pregnancyDetails.classList.add('hidden');
+            elements.notReadyMessage.classList.add('hidden');
+            elements.readyForMeat.classList.add('hidden');
+            elements.notReadyForMeat.classList.add('hidden');
         }
 
         function saveData(event) {
             event.preventDefault();
-            const form = document.getElementById('rabbitForm');
-            const cageNumber = form.dataset.cageNumber;
-            const data = new FormData(form);
-            const obj = {};
-            data.forEach((value, key) => {
-                obj[key] = value;
-            });
+            const cageNumber = elements.rabbitForm.dataset.cageNumber;
+            const data = new FormData(elements.rabbitForm);
+            const obj = Object.fromEntries(data.entries()); // Convert FormData to Object
             localStorage.setItem(`cageData${cageNumber}`, JSON.stringify(obj));
             goHome();
         }
 
         function loadData(cageNumber) {
             const data = JSON.parse(localStorage.getItem(`cageData${cageNumber}`));
-            const form = document.getElementById('rabbitForm');
             if (data) {
-                Object.keys(data).forEach(key => {
-                    const field = form.elements[key];
+                Object.entries(data).forEach(([key, value]) => {
+                    const field = elements.rabbitForm.elements[key];
                     if (field) {
                         if (field.type === 'radio') {
-                            const radioGroup = form.elements[key];
-                            for (let radio of radioGroup) {
-                                if (radio.value === data[key]) {
-                                    radio.checked = true;
-                                }
-                            }
+                            field.value === value && (field.checked = true);
                         } else {
-                            field.value = data[key];
+                            field.value = value;
                         }
                     }
                 });
+                elements.profileSelect.value = data['profile'];
                 toggleProfileFields();  // Update the visible fields based on the loaded profile
+                
+                // Check for pregnancy state
                 if (data['profile'] === 'doe') {
-                    document.getElementById('doeFields').style.display = 'block';
-                    if (data['pregnantDoe'] === 'yes') {
-                        togglePregnancyDetails(true);
-                    } else {
-                        togglePregnancyDetails(false);
-                    }
-                } else if (data['profile'] === 'fattener') {
-                    document.getElementById('fattenerSection').style.display = 'block';
-                } else if (data['profile'] === 'breeder') {
-                    document.getElementById('breederSection').style.display = 'block';
+                    togglePregnancyDetails(data['pregnantDoe'] === 'yes');
                 }
             } else {
                 resetFields();
