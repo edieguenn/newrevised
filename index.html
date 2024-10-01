@@ -33,10 +33,23 @@
                 <label for="family">FAMILY:</label>
                 <input type="text" id="family" name="family">
             </div>
-            <div>
-                <label for="birthDate">DATE OF BIRTH:</label>
-                <input type="date" id="birthDate" name="birthDate" onchange="checkReadinessForFattener()">
+
+            <!-- Separate Date of Birth Fields for Each Profile -->
+            <div id="doeBirthDate" class="birthDateField" style="display: none;">
+                <label for="birthDateDoe">DATE OF BIRTH:</label>
+                <input type="date" id="birthDateDoe" name="birthDateDoe" onchange="checkReadinessForFattener()">
             </div>
+
+            <div id="fattenerBirthDate" class="birthDateField" style="display: none;">
+                <label for="birthDateFattener">DATE OF BIRTH:</label>
+                <input type="date" id="birthDateFattener" name="birthDateFattener" onchange="checkReadinessForFattener()">
+            </div>
+
+            <div id="breederBirthDate" class="birthDateField" style="display: none;">
+                <label for="birthDateBreeder">DATE OF BIRTH:</label>
+                <input type="date" id="birthDateBreeder" name="birthDateBreeder">
+            </div>
+
             <div>
                 <label for="weight">WEIGHT:</label>
                 <input type="text" id="weight" name="weight">
@@ -131,6 +144,11 @@
             document.getElementById('pregnantSection').style.display = profile === 'doe' ? 'block' : 'none';
             document.getElementById('fattenerSection').style.display = profile === 'fattener' ? 'block' : 'none';
             document.getElementById('breederSection').style.display = profile === 'breeder' ? 'block' : 'none';
+
+            // Show the correct date of birth field based on the profile
+            document.getElementById('doeBirthDate').style.display = profile === 'doe' ? 'block' : 'none';
+            document.getElementById('fattenerBirthDate').style.display = profile === 'fattener' ? 'block' : 'none';
+            document.getElementById('breederBirthDate').style.display = profile === 'breeder' ? 'block' : 'none';
         }
 
         function calculateDueDate(profileType) {
@@ -146,9 +164,9 @@
         }
 
         function checkReadinessForFattener() {
-            const birthDate = document.getElementById('birthDate').value;
-            if (birthDate) {
-                const birthDateObj = new Date(birthDate);
+            const birthDateFattener = document.getElementById('birthDateFattener').value;
+            if (birthDateFattener) {
+                const birthDateObj = new Date(birthDateFattener);
                 const today = new Date();
                 const diffInWeeks = Math.floor((today - birthDateObj) / (1000 * 60 * 60 * 24 * 7));
 
