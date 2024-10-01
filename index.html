@@ -35,7 +35,7 @@
             </div>
             <div>
                 <label for="birthDate">DATE OF BIRTH:</label>
-                <input type="date" id="birthDate" name="birthDate">
+                <input type="date" id="birthDate" name="birthDate" onchange="checkReadinessForFattener()">
             </div>
             <div>
                 <label for="weight">WEIGHT:</label>
@@ -64,15 +64,22 @@
                 </div>
             </div>
 
-            <!-- Rabbit Fattener and Breeder Fields -->
+            <!-- Rabbit Fattener Section with new condition -->
             <div id="fattenerSection" style="display: none;">
                 <div>
                     <label for="foodIntake">FOOD INTAKE:</label>
                     <label><input type="radio" name="foodIntake" value="normal"> NORMAL</label>
                     <label><input type="radio" name="foodIntake" value="irregular"> IRREGULAR</label>
                 </div>
+                <div id="readyForMeat" style="display: none;">
+                    <p>This rabbit is ready for meat production.</p>
+                </div>
+                <div id="notReadyForMeat" style="display: none;">
+                    <p>This rabbit is not ready for meat production.</p>
+                </div>
             </div>
 
+            <!-- Rabbit Breeder Section -->
             <div id="breederSection" style="display: none;">
                 <div>
                     <label>ELIGIBLE FOR MATING:</label>
@@ -135,6 +142,23 @@
             }
         }
 
+        function checkReadinessForFattener() {
+            const birthDate = document.getElementById('birthDate').value;
+            if (birthDate) {
+                const birthDateObj = new Date(birthDate);
+                const today = new Date();
+                const diffInWeeks = Math.floor((today - birthDateObj) / (1000 * 60 * 60 * 24 * 7));
+                
+                if (diffInWeeks >= 12) {
+                    document.getElementById('readyForMeat').style.display = 'block';
+                    document.getElementById('notReadyForMeat').style.display = 'none';
+                } else {
+                    document.getElementById('readyForMeat').style.display = 'none';
+                    document.getElementById('notReadyForMeat').style.display = 'block';
+                }
+            }
+        }
+
         function saveData(event) {
             event.preventDefault();
             const form = document.getElementById('rabbitForm');
@@ -156,7 +180,7 @@
                     const field = form.elements[key];
                     if (field) {
                         if (field.type === 'radio') {
-                            field.value = data[key];
+                            form.elements[key].value = data[key];
                             if (data[key] === "yes") {
                                 field.checked = true;
                                 togglePregnancyDetails(true);
