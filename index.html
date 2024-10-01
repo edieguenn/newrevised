@@ -124,8 +124,7 @@
         function goHome() {
             document.getElementById('homePage').style.display = 'block';
             document.getElementById('cageDetails').style.display = 'none';
-            document.getElementById('pregnancyDetails').style.display = 'none';
-            document.getElementById('notReadyMessage').style.display = 'none';
+            resetFields();
         }
 
         function showCageDetails(cageNumber) {
@@ -157,6 +156,14 @@
                 startDate.setDate(startDate.getDate() + 30); // Add 30 days for due date
                 document.getElementById(dueDateId).value = startDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
             }
+        }
+
+        function resetFields() {
+            const form = document.getElementById('rabbitForm');
+            form.reset();
+            toggleProfileFields(); // Reset visibility of profile fields
+            document.getElementById('pregnancyDetails').style.display = 'none';
+            document.getElementById('notReadyMessage').style.display = 'none';
         }
 
         function saveData(event) {
@@ -192,13 +199,20 @@
                     }
                 });
                 toggleProfileFields();  // Update the visible fields based on the loaded profile
-                if (data['profile'] === 'doe' && data['pregnantDoe'] === 'yes') {
-                    togglePregnancyDetails(true);
-                } else {
-                    togglePregnancyDetails(false);
+                if (data['profile'] === 'doe') {
+                    document.getElementById('doeFields').style.display = 'block';
+                    if (data['pregnantDoe'] === 'yes') {
+                        togglePregnancyDetails(true);
+                    } else {
+                        togglePregnancyDetails(false);
+                    }
+                } else if (data['profile'] === 'fattener') {
+                    document.getElementById('fattenerSection').style.display = 'block';
+                } else if (data['profile'] === 'breeder') {
+                    document.getElementById('breederSection').style.display = 'block';
                 }
             } else {
-                form.reset();
+                resetFields();
             }
         }
     </script>
