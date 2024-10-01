@@ -27,19 +27,19 @@
             <!-- Common Fields -->
             <div>
                 <label for="breed">BREED:</label>
-                <input type="text" id="breed" name="breed" required>
+                <input type="text" id="breed" name="breed">
             </div>
             <div>
                 <label for="family">FAMILY:</label>
-                <input type="text" id="family" name="family" required>
+                <input type="text" id="family" name="family">
             </div>
             <div>
                 <label for="birthDate">DATE OF BIRTH:</label>
-                <input type="date" id="birthDate" name="birthDate" onchange="checkReadinessForFattener()" required>
+                <input type="date" id="birthDate" name="birthDate" onchange="checkReadinessForFattener()">
             </div>
             <div>
                 <label for="weight">WEIGHT:</label>
-                <input type="number" id="weight" name="weight" required>
+                <input type="text" id="weight" name="weight">
             </div>
 
             <!-- Rabbit Doe Fields (Pregnancy related) -->
@@ -51,12 +51,12 @@
                 </div>
                 <div id="pregnancyDetails" style="display: none;">
                     <div>
-                        <label for="pregnancyStart">START OF PREGNANCY:</label>
-                        <input type="date" id="pregnancyStart" name="pregnancyStart" onchange="calculateDueDate()">
+                        <label for="pregnancyStartDoe">START OF PREGNANCY:</label>
+                        <input type="date" id="pregnancyStartDoe" name="pregnancyStartDoe" onchange="calculateDueDate('Doe')">
                     </div>
                     <div>
-                        <label for="dueDate">DUE DATE OF PREGNANCY:</label>
-                        <input type="text" id="dueDate" name="dueDate" readonly>
+                        <label for="dueDateDoe">DUE DATE OF PREGNANCY:</label>
+                        <input type="text" id="dueDateDoe" name="dueDateDoe" readonly>
                     </div>
                 </div>
                 <div id="notReadyMessage" style="display: none;">
@@ -131,20 +131,17 @@
             document.getElementById('pregnantSection').style.display = profile === 'doe' ? 'block' : 'none';
             document.getElementById('fattenerSection').style.display = profile === 'fattener' ? 'block' : 'none';
             document.getElementById('breederSection').style.display = profile === 'breeder' ? 'block' : 'none';
-
-            // Reset and hide any messages when changing profiles
-            document.getElementById('readyForMeat').style.display = 'none';
-            document.getElementById('notReadyForMeat').style.display = 'none';
-            document.getElementById('notReadyMessage').style.display = 'none';
-            document.getElementById('pregnancyDetails').style.display = 'none';
         }
 
-        function calculateDueDate() {
-            const pregnancyStart = document.getElementById('pregnancyStart').value;
+        function calculateDueDate(profileType) {
+            let pregnancyStartId = `pregnancyStart${profileType}`;
+            let dueDateId = `dueDate${profileType}`;
+            
+            const pregnancyStart = document.getElementById(pregnancyStartId).value;
             if (pregnancyStart) {
                 const startDate = new Date(pregnancyStart);
                 startDate.setDate(startDate.getDate() + 30); // Add 30 days for due date
-                document.getElementById('dueDate').value = startDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+                document.getElementById(dueDateId).value = startDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
             }
         }
 
@@ -186,17 +183,20 @@
                     const field = form.elements[key];
                     if (field) {
                         if (field.type === 'radio') {
-                            field.forEach(radio => {
+                            const radioGroup = form.elements[key];
+                            for (let radio of radioGroup) {
                                 if (radio.value === data[key]) {
                                     radio.checked = true;
                                 }
-                            });
+                            }
                         } else {
                             field.value = data[key];
                         }
                     }
                 });
-                toggleProfileFields(); // Ensure correct profile fields are shown
+                toggleProfileFields();  // Update the visible fields based on the loaded profile
+            } else {
+                form.reset();
             }
         }
     </script>
