@@ -33,9 +33,9 @@
                 <label for="family">FAMILY:</label>
                 <input type="text" id="family" name="family">
             </div>
-            <div id="commonBirthDateSection">
+            <div id="birthDateSection">
                 <label for="birthDate">DATE OF BIRTH:</label>
-                <input type="date" id="birthDate" name="birthDate">
+                <input type="date" id="birthDate" name="birthDate" onchange="checkReadinessForFattener()">
             </div>
             <div>
                 <label for="weight">WEIGHT:</label>
@@ -67,10 +67,6 @@
             <!-- Rabbit Fattener Section -->
             <div id="fattenerSection" style="display: none;">
                 <div>
-                    <label for="birthDateFattener">DATE OF BIRTH (Fattener):</label>
-                    <input type="date" id="birthDateFattener" name="birthDateFattener" onchange="checkReadinessForFattener()">
-                </div>
-                <div>
                     <label for="foodIntake">FOOD INTAKE:</label>
                     <label><input type="radio" name="foodIntake" value="normal"> NORMAL</label>
                     <label><input type="radio" name="foodIntake" value="irregular"> IRREGULAR</label>
@@ -85,10 +81,6 @@
 
             <!-- Rabbit Breeder Section -->
             <div id="breederSection" style="display: none;">
-                <div>
-                    <label for="birthDateBreeder">DATE OF BIRTH (Breeder):</label>
-                    <input type="date" id="birthDateBreeder" name="birthDateBreeder">
-                </div>
                 <div>
                     <label>ELIGIBLE FOR MATING:</label>
                     <label><input type="radio" name="mating" value="yes"> YES</label>
@@ -154,7 +146,7 @@
         }
 
         function checkReadinessForFattener() {
-            const birthDate = document.getElementById('birthDateFattener').value;
+            const birthDate = document.getElementById('birthDate').value;
             if (birthDate) {
                 const birthDateObj = new Date(birthDate);
                 const today = new Date();
@@ -192,21 +184,4 @@
                     if (field) {
                         if (field.type === 'radio') {
                             const radioGroup = form.elements[key];
-                            for (let radio of radioGroup) {
-                                if (radio.value === data[key]) {
-                                    radio.checked = true;
-                                }
-                            }
-                        } else {
-                            field.value = data[key];
-                        }
-                    }
-                });
-                toggleProfileFields();  // Update the visible fields based on the loaded profile
-            } else {
-                form.reset();
-            }
-        }
-    </script>
-</body>
-</html>
+                            for (let
