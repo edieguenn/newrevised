@@ -3,184 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rabbit Farm</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        header {
-            display: flex;
-            justify-content: space-between;
-            background-color: #4CAF50;
-            padding: 10px;
-            color: white;
-        }
-        form {
-            margin: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        input, select {
-            margin-bottom: 10px;
-            padding: 5px;
-            width: 100%;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <title>Rabbit Cage Management</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <header>
+        <button onclick="goHome()">&#x1F3E0;</button>
+        <span>Rabbit Cage Management</span>
+    </header>
 
-<header>
-    <h1>Rabbit Profile Management</h1>
-</header>
-
-<section>
-    <label for="profileType">Select Rabbit Profile:</label>
-    <select id="profileType" onchange="loadProfileForm()">
-        <option value="">Select a profile</option>
-        <option value="doe">Rabbit Doe</option>
-        <option value="fattener">Rabbit Fattener</option>
-        <option value="breeder">Rabbit Breeder</option>
-    </select>
-</section>
-
-<section id="profileForm"></section>
-
-<script>
-    function loadProfileForm() {
-        const profileType = document.getElementById("profileType").value;
-        const formContainer = document.getElementById("profileForm");
-        formContainer.innerHTML = ''; // Clear previous form
-
-        if (profileType === "doe") {
-            formContainer.innerHTML = getDoeForm();
-        } else if (profileType === "fattener") {
-            formContainer.innerHTML = getFattenerForm();
-        } else if (profileType === "breeder") {
-            formContainer.innerHTML = getBreederForm();
-        }
-    }
-
-    function getDoeForm() {
-        return `
-            <h2>Rabbit Doe Profile</h2>
-            <form id="doeForm" onsubmit="submitDoeForm(event)">
-                <label for="cageNumber">Cage Number:</label>
-                <select id="cageNumber" name="cageNumber">
-                    <option value="Cage 1">Cage 1</option>
-                    <option value="Cage 2">Cage 2</option>
-                    <option value="Cage 3">Cage 3</option>
-                </select>
-
-                <label for="serialNumber">Serial Number:</label>
-                <input type="text" id="serialNumber" name="serialNumber" required>
-
-                <label for="breed">Breed:</label>
+    <div id="cageDetails">
+        <form id="rabbitForm" onsubmit="saveData(event)">
+            <div>
+                <label for="breed">BREED:</label>
                 <input type="text" id="breed" name="breed">
-
-                <label for="age">Age (months):</label>
-                <input type="number" id="age" name="age">
-
-                <label for="birthDate">Date of Birth:</label>
-                <input type="date" id="birthDate" name="birthDate" required>
-
-                <label for="gender">Gender:</label>
-                <input type="radio" id="female" name="gender" value="female" checked> Female
-
-                <label for="family">Rabbit Family:</label>
+            </div>
+            <div>
+                <label for="family">FAMILY:</label>
                 <input type="text" id="family" name="family">
-
-                <label for="foodIntake">Food Intake:</label>
-                <input type="radio" id="regular" name="foodIntake" value="regular" checked> Regular
-                <input type="radio" id="irregular" name="foodIntake" value="irregular"> Irregular
-
-                <label for="weight">Weight (kg):</label>
-                <input type="number" id="weight" name="weight">
-
-                <label>Is Pregnant?</label>
-                <input type="radio" id="pregnantYes" name="pregnant" value="yes" onclick="togglePregnancyDetails(true)"> Yes
-                <input type="radio" id="pregnantNo" name="pregnant" value="no" onclick="togglePregnancyDetails(false)" checked> No
-
-                <div id="pregnancyDetails" style="display:none;">
-                    <label for="pregnancyStart">Pregnancy Start Date:</label>
-                    <input type="date" id="pregnancyStart" name="pregnancyStart" onchange="calculateDueDate()">
-                    <label>Predicted Due Date:</label>
-                    <span id="dueDate"></span>
+            </div>
+            <div>
+                <label for="birthDate">DATE OF BIRTH:</label>
+                <input type="date" id="birthDate" name="birthDate">
+            </div>
+            <div>
+                <label for="weight">WEIGHT:</label>
+                <input type="text" id="weight" name="weight">
+            </div>
+            <div>
+                <label>PREGNANT:</label>
+                <label><input type="radio" name="pregnant" value="yes" onclick="togglePregnancyDetails(true)"> YES</label>
+                <label><input type="radio" name="pregnant" value="no" onclick="togglePregnancyDetails(false)"> NO</label>
+            </div>
+            <div id="pregnancyDetails" style="display: none;">
+                <div>
+                    <label for="matedRabbit">MATED RABBIT:</label>
+                    <input type="text" id="matedRabbit" name="matedRabbit">
                 </div>
+                <div>
+                    <label for="pregnancyStart">START OF PREGNANCY:</label>
+                    <input type="date" id="pregnancyStart" name="pregnancyStart">
+                </div>
+                <div>
+                    <label for="dueDate">DUE DATE OF PREGNANCY:</label>
+                    <input type="date" id="dueDate" name="dueDate">
+                </div>
+            </div>
+            <div>
+                <label for="foodIntake">FOOD INTAKE:</label>
+                <label><input type="radio" name="foodIntake" value="normal"> NORMAL</label>
+                <label><input type="radio" name="foodIntake" value="irregular"> IRREGULAR</label>
+            </div>
+            <div>
+                <label>ELIGIBLE FOR MATING:</label>
+                <label><input type="radio" name="mating" value="yes"> YES</label>
+                <label><input type="radio" name="mating" value="no"> NO</label>
+            </div>
+            <div>
+                <label for="note">NOTE:</label>
+                <textarea id="note" name="note"></textarea>
+            </div>
+            <div class="buttons">
+                <button type="submit">SUBMIT</button>
+                <button type="button" onclick="goHome()">CANCEL</button>
+            </div>
+        </form>
+    </div>
 
-                <button type="submit">Save Doe</button>
-            </form>`;
-    }
+    <div id="homePage" class="cage-list" style="display: none;">
+        <button onclick="showCageDetails(1)">CAGE 1</button>
+        <button onclick="showCageDetails(2)">CAGE 2</button>
+        <button onclick="showCageDetails(3)">CAGE 3</button>
+        <button onclick="showCageDetails(4)">CAGE 4</button>
+    </div>
 
-    function getFattenerForm() {
-        return `
-            <h2>Rabbit Fattener Profile</h2>
-            <form id="fattenerForm" onsubmit="submitFattenerForm(event)">
-                <label for="cageNumber">Cage Number:</label>
-                <select id="cageNumber" name="cageNumber">
-                    <option value="Cage 1">Cage 1</option>
-                    <option value="Cage 2">Cage 2</option>
-                    <option value="Cage 3">Cage 3</option>
-                </select>
+    <script>
+        function goHome() {
+            document.getElementById('homePage').style.display = 'block';
+            document.getElementById('cageDetails').style.display = 'none';
+            document.getElementById('pregnancyDetails').style.display = 'none';
+        }
 
-                <label for="serialNumber">Serial Number:</label>
-                <input type="text" id="serialNumber" name="serialNumber" required>
+        function showCageDetails(cageNumber) {
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('cageDetails').style.display = 'block';
+            loadData(cageNumber);
+            // Store the current cage number
+            document.getElementById('rabbitForm').dataset.cageNumber = cageNumber;
+        }
 
-                <label for="breed">Breed:</label>
-                <input type="text" id="breed" name="breed">
+        function togglePregnancyDetails(show) {
+            document.getElementById('pregnancyDetails').style.display = show ? 'block' : 'none';
+        }
 
-                <label for="age">Age (weeks):</label>
-                <input type="number" id="age" name="age">
+        function saveData(event) {
+            event.preventDefault();
+            const form = document.getElementById('rabbitForm');
+            const cageNumber = form.dataset.cageNumber;
+            const data = new FormData(form);
+            const obj = {};
+            data.forEach((value, key) => {
+                obj[key] = value;
+            });
+            localStorage.setItem(`cageData${cageNumber}`, JSON.stringify(obj));
+            goHome();
+        }
 
-                <label for="birthDate">Date of Birth:</label>
-                <input type="date" id="birthDate" name="birthDate" required>
-
-                <label for="gender">Gender:</label>
-                <input type="radio" id="male" name="gender" value="male" checked> Male
-
-                <label for="family">Rabbit Family:</label>
-                <input type="text" id="family" name="family">
-
-                <label for="foodIntake">Food Intake:</label>
-                <input type="radio" id="regular" name="foodIntake" value="regular" checked> Regular
-                <input type="radio" id="irregular" name="foodIntake" value="irregular"> Irregular
-
-                <label for="weight">Weight (kg):</label>
-                <input type="number" id="weight" name="weight">
-
-                <span id="fattenerStatus"></span><br>
-
-                <button type="submit">Save Fattener</button>
-            </form>`;
-    }
-
-    function getBreederForm() {
-        return `
-            <h2>Rabbit Breeder Profile</h2>
-            <form id="breederForm" onsubmit="submitBreederForm(event)">
-                <label for="cageNumber">Cage Number:</label>
-                <select id="cageNumber" name="cageNumber">
-                    <option value="Cage 1">Cage 1</option>
-                    <option value="Cage 2">Cage 2</option>
-                    <option value="Cage 3">Cage 3</option>
-                </select>
-
-                <label for="serialNumber">Serial Number:</label>
-                <input type="text" id="serialNumber" name="serialNumber" required>
-
-                <label for="breed">Breed:</label>
-                <input type="text" id="breed" name="breed">
-
-                <label for="age">Age (months):</label>
-     
+        function loadData(cageNumber) {
+            const data = JSON.parse(localStorage.getItem(`cageData${cageNumber}`));
+            const form = document.getElementById('rabbitForm');
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    const field = form.elements[key];
+                    if (field) {
+                        if (field.type === 'radio') {
+                            form.elements[key].value = data[key];
+                            if (data[key] === "yes") {
+                                field.checked = true;
+                                togglePregnancyDetails(true);
+                            } else {
+                                field.checked = true;
+                                togglePregnancyDetails(false);
+                            }
+                        } else {
+                            field.value = data[key];
+                        }
+                    }
+                });
+            } else {
+                form.reset();
+                togglePregnancyDetails(false);
+            }
+        }
+    </script>
+</body>
+</html>
