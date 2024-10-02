@@ -174,119 +174,18 @@
                 <button type="button" onclick="clearForm()">CLEAR FORM</button>
                 <button type="button" onclick="goHome()">CANCEL</button>
             </div>
-            <div class="buttons">
-                <button type="button" onclick="deleteRabbitData()">DELETE CAGE DATA</button>
-            </div>
         </form>
+        <div class="buttons">
+            <button type="button" onclick="deleteRabbitData()">DELETE CAGE DATA</button>
+        </div>
     </div>
 
     <div id="homePage" class="cage-list" style="display: block;">
-        <h2>CAGE MANAGEMENT</h2>
-        <div id="cageButtons"></div> <!-- Container for dynamic cage buttons -->
-        <button type="button" onclick="addCage()">ADD CAGE</button>
+        <h2>CAGES</h2>
+        <ul id="cageList"></ul>
+        <button onclick="addCage()">ADD CAGE</button>
     </div>
 
-    <script>
-        const elements = {
-            homePage: document.getElementById('homePage'),
-            cageDetails: document.getElementById('cageDetails'),
-            cageButtons: document.getElementById('cageButtons'),
-        };
-
-        let cages = [];
-
-        function goHome() {
-            elements.homePage.style.display = 'block';
-            elements.cageDetails.style.display = 'none';
-        }
-
-        function addCage() {
-            const cageName = prompt("Enter Cage Name:");
-            if (cageName) {
-                cages.push(cageName);
-                renderCages();
-            }
-        }
-
-        function renderCages() {
-            elements.cageButtons.innerHTML = '';
-            cages.forEach((cage, index) => {
-                const cageButton = document.createElement('button');
-                cageButton.innerText = cage;
-                cageButton.onclick = () => openCage(index);
-                elements.cageButtons.appendChild(cageButton);
-                
-                const deleteButton = document.createElement('button');
-                deleteButton.innerText = "DELETE";
-                deleteButton.onclick = () => deleteCage(index);
-                elements.cageButtons.appendChild(deleteButton);
-            });
-        }
-
-        function deleteCage(index) {
-            cages.splice(index, 1);
-            renderCages();
-        }
-
-        function openCage(index) {
-            elements.homePage.style.display = 'none';
-            elements.cageDetails.style.display = 'block';
-            // You can initialize form data here based on the cage selected.
-        }
-
-        function saveData(event) {
-            event.preventDefault();
-            // Logic to save the data for the selected cage.
-            alert('Data saved!');
-        }
-
-        function clearForm() {
-            document.getElementById('rabbitForm').reset();
-        }
-
-        function toggleProfileFields() {
-            const profile = document.getElementById('profile').value;
-            document.getElementById('doeFields').style.display = profile === 'doe' ? 'block' : 'none';
-            document.getElementById('fattenerSection').style.display = profile === 'fattener' ? 'block' : 'none';
-            document.getElementById('breederSection').style.display = profile === 'breeder' ? 'block' : 'none';
-        }
-
-        function togglePregnancyDetails(isPregnant) {
-            document.getElementById('pregnancyDetails').style.display = isPregnant ? 'block' : 'none';
-            document.getElementById('notReadyMessage').style.display = !isPregnant ? 'block' : 'none';
-        }
-
-        function calculateDueDate(type) {
-            const pregnancyStart = new Date(document.getElementById(`pregnancyStart${type}`).value);
-            const dueDate = new Date(pregnancyStart);
-            dueDate.setDays(pregnancyStart.getDate() + 30); // Assuming a gestation period of 30 days
-            document.getElementById(`dueDate${type}`).value = dueDate.toDateString();
-        }
-
-        function checkMeatProduction() {
-            // Logic to check if the rabbit is ready for meat production
-        }
-
-        function checkMatingEligibility() {
-            const dateOfBirth = new Date(document.getElementById('dateOfBirthBreeder').value);
-            const today = new Date();
-            const ageInMonths = (today.getFullYear() - dateOfBirth.getFullYear()) * 12 + today.getMonth() - dateOfBirth.getMonth();
-            const message = document.getElementById('matingEligibilityMessage');
-
-            if (ageInMonths >= 6) {
-                message.innerHTML = "This rabbit is eligible for mating.";
-                message.style.color = 'green';
-            } else {
-                message.innerHTML = "This rabbit is not eligible for mating.";
-                message.style.color = 'red';
-            }
-            message.style.display = 'block';
-        }
-
-        function deleteRabbitData() {
-            // Logic to delete the rabbit data for the selected cage
-            alert('Rabbit data deleted!');
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
