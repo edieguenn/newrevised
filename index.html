@@ -206,8 +206,15 @@
 
         function deleteRabbitData() {
             if (confirm("Are you sure you want to delete this cage data?")) {
+                const cageNumber = elements.rabbitForm.dataset.cageNumber;
+                
                 // Logic to delete data for the cage
-                alert("Cage data deleted!");
+                alert(`Cage data for Cage ${cageNumber} deleted!`);
+
+                // Decrement cageCount
+                cageCount--;
+
+                // Update cage buttons
                 updateCageButtons(); // Update cage button numbering after deletion
                 goHome();
             }
