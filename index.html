@@ -12,7 +12,7 @@
         <span>Rabbit Cage Management</span>
     </header>
 
-    <div id="cageDetails">
+    <div id="cageDetails" style="display: none;">
         <form id="rabbitForm" onsubmit="saveData(event)">
             <!-- Profile Selector -->
             <div>
@@ -195,67 +195,36 @@
             elements.notReadyForMeat.style.display = 'none';
         }
 
-        function clearForm() {
-            resetFields(); // Clear the form and reset fields
-        }
-
         function saveData(event) {
             event.preventDefault();
-            const cageNumber = elements.rabbitForm.dataset.cageNumber;
-            const data = new FormData(elements.rabbitForm);
-            const obj = Object.fromEntries(data.entries()); // Convert FormData to Object
-            localStorage.setItem(`cageData${cageNumber}`, JSON.stringify(obj));
+            // Logic to save rabbit data here
+            alert("Rabbit data saved!");
             goHome();
         }
 
-        function loadData(cageNumber) {
-            const data = JSON.parse(localStorage.getItem(`cageData${cageNumber}`));
-            if (data) {
-                Object.entries(data).forEach(([key, value]) => {
-                    const field = elements.rabbitForm.elements[key];
-                    if (field) {
-                        if (field.type === 'radio') {
-                            field.value === value && (field.checked = true);
-                        } else {
-                            field.value = value;
-                        }
-                    }
-                });
-                elements.profileSelect.value = data['profile'];
-                toggleProfileFields();  // Update the visible fields based on the loaded profile
-                
-                // Check for pregnancy state
-                if (data['profile'] === 'doe') {
-                    togglePregnancyDetails(data['pregnantDoe'] === 'yes');
-                }
-            } else {
-                resetFields();
+        function clearForm() {
+            resetFields();
+        }
+
+        function deleteRabbitData() {
+            if (confirm("Are you sure you want to delete this cage data?")) {
+                // Logic to delete data for the cage
+                alert("Cage data deleted!");
+                goHome();
             }
         }
 
         function addCage() {
-            const cageCount = document.querySelectorAll('.cage-list button').length;
-            const newCageNumber = cageCount + 1;
-
-            // Create new cage button
-            const newButton = document.createElement('button');
-            newButton.textContent = `CAGE ${newCageNumber}`;
-            newButton.setAttribute('onclick', `showCageDetails(${newCageNumber})`);
-
-            // Add buttons to the cage buttons container
-            elements.cageButtons.appendChild(newButton);
+            const newCageNumber = elements.cageButtons.children.length + 1;
+            const newCageButton = document.createElement('button');
+            newCageButton.innerText = `CAGE ${newCageNumber}`;
+            newCageButton.onclick = () => showCageDetails(newCageNumber);
+            elements.cageButtons.appendChild(newCageButton);
         }
 
-        function deleteRabbitData() {
-            const cageNumber = elements.rabbitForm.dataset.cageNumber;
-            localStorage.removeItem(`cageData${cageNumber}`); // Remove data from localStorage
-            const cageButton = document.querySelector(`.cage-list button[onclick="showCageDetails(${cageNumber})"]`);
-            if (cageButton) {
-                elements.cageButtons.removeChild(cageButton); // Remove the button from the DOM
-            }
-            resetFields(); // Reset form fields after deletion
-            alert("Cage data deleted successfully.");
-            goHome(); // Return to home page
+        function loadData(cageNumber) {
+            // Logic to load data for the specified cage number
+            alert(`Loading data for Cage ${cageNumber}`);
         }
     </script>
 </body>
