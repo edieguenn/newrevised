@@ -195,7 +195,29 @@
 
         function saveData(event) {
             event.preventDefault();
-            // Logic to save rabbit data here
+            // Create an object to hold the rabbit data
+            const rabbitData = {
+                profile: elements.profileSelect.value,
+                serialNumber: elements.rabbitForm.serialNumber.value,
+                age: elements.rabbitForm.age.value,
+                dateOfBirth: elements.rabbitForm.dateOfBirth.value,
+                gender: elements.rabbitForm.gender.value,
+                family: elements.rabbitForm.family.value,
+                foodIntakeDoe: elements.rabbitForm.foodIntakeDoe.value,
+                weight: elements.rabbitForm.weight.value,
+                pregnant: elements.rabbitForm.pregnantDoe ? elements.rabbitForm.pregnantDoe.value : null,
+                pregnancyStart: elements.rabbitForm.pregnancyStartDoe ? elements.rabbitForm.pregnancyStartDoe.value : null,
+                dueDate: elements.rabbitForm.dueDateDoe.value,
+                foodIntakeFattener: elements.rabbitForm.foodIntakeFattener ? elements.rabbitForm.foodIntakeFattener.value : null,
+                matingEligible: elements.rabbitForm.matingBreeder ? elements.rabbitForm.matingBreeder.value : null,
+                note: elements.rabbitForm.note.value,
+                cageNumber: elements.rabbitForm.dataset.cageNumber
+            };
+
+            // Here, you can handle the data as needed (e.g., send it to a server or log it)
+            console.log("Rabbit Data Saved:", rabbitData);
+
+            // Show a success message
             alert("Rabbit data saved!");
             goHome();
         }
@@ -205,9 +227,8 @@
         }
 
         function deleteRabbitData() {
-            // Removed confirmation
             const cageNumber = elements.rabbitForm.dataset.cageNumber;
-            
+
             // Logic to delete data for the cage
             alert(`Cage data for Cage ${cageNumber} deleted!`);
 
@@ -228,8 +249,9 @@
         }
 
         function loadData(cageNumber) {
-            // Removed the alert to prevent confirmation when loading cage data
             // Logic to load data for the specified cage number can be implemented here
+            // For demonstration purposes, we can simulate loading data
+            console.log(`Loading data for cage number: ${cageNumber}`);
         }
 
         function updateCageButtons() {
