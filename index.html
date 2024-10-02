@@ -50,7 +50,7 @@
                     <input type="text" id="family" name="family">
                 </div>
                 <div>
-                    <label for="foodIntake">FOOD INTAKE:</label>
+                    <label>FOOD INTAKE:</label>
                     <label><input type="radio" name="foodIntakeDoe" value="normal"> NORMAL</label>
                     <label><input type="radio" name="foodIntakeDoe" value="irregular"> IRREGULAR</label>
                 </div>
@@ -81,7 +81,7 @@
             <!-- Rabbit Fattener Section -->
             <div id="fattenerSection" style="display: none;">
                 <div>
-                    <label for="foodIntakeFattener">FOOD INTAKE:</label>
+                    <label>FOOD INTAKE:</label>
                     <label><input type="radio" name="foodIntakeFattener" value="normal"> NORMAL</label>
                     <label><input type="radio" name="foodIntakeFattener" value="irregular"> IRREGULAR</label>
                 </div>
@@ -140,6 +140,7 @@
         };
 
         let cageCount = 0; // To keep track of the number of cages
+        let rabbitDataList = []; // To store all rabbit data
 
         // Initialize the form
         window.onload = function() {
@@ -195,75 +196,71 @@
 
         function saveData(event) {
             event.preventDefault(); // Prevent form submission
+            const formData = new FormData(elements.rabbitForm);
+            const rabbitData = {};
 
-            // Create an object to hold the rabbit data
-            const rabbitData = {
-                profile: elements.profileSelect.value,
-                serialNumber: elements.rabbitForm.serialNumber.value,
-                age: elements.rabbitForm.age.value,
-                dateOfBirth: elements.rabbitForm.dateOfBirth.value,
-                gender: elements.rabbitForm.gender.value,
-                family: elements.rabbitForm.family.value,
-                foodIntakeDoe: elements.rabbitForm.foodIntakeDoe ? 
-                    elements.rabbitForm.foodIntakeDoe.value : null,
-                weight: elements.rabbitForm.weight.value,
-                pregnant: elements.rabbitForm.pregnantDoe ? 
-                    elements.rabbitForm.pregnantDoe.value : null,
-                pregnancyStart: elements.rabbitForm.pregnancyStartDoe ? 
-                    elements.rabbitForm.pregnancyStartDoe.value : null,
-                dueDate: elements.rabbitForm.dueDateDoe.value,
-                foodIntakeFattener: elements.rabbitForm.foodIntakeFattener ? 
-                    elements.rabbitForm.foodIntakeFattener.value : null,
-                matingEligible: elements.rabbitForm.matingBreeder ? 
-                    elements.rabbitForm.matingBreeder.value : null,
-                note: elements.rabbitForm.note.value,
-                cageNumber: elements.rabbitForm.dataset.cageNumber
-            };
-
-            // For radio buttons, get the checked value directly
-            const foodIntakeDoe = document.querySelector('input[name="foodIntakeDoe"]:checked');
-            if (foodIntakeDoe) {
-                rabbitData.foodIntakeDoe = foodIntakeDoe.value;
+            // Gather form data
+            for (const [key, value] of formData.entries()) {
+                rabbitData[key] = value;
             }
 
-            const pregnantDoe = document.querySelector('input[name="pregnantDoe"]:checked');
-            if (pregnantDoe) {
-                rabbitData.pregnant = pregnantDoe.value;
+            // Check eligibility for mating based on date of birth
+            const dateOfBirth = new Date(rabbitData.dateOfBirth);
+            const currentDate = new Date();
+            const ageInMonths = (currentDate - dateOfBirth) / (1000 * 60 * 60 * 24 * 30); // Convert milliseconds to months
+
+            if (ageInMonths >= 6) {
+                rabbitData.eligibleForMating = true;
+            } else {
+                rabbitData.eligibleForMating = false;
             }
 
-            const matingBreeder = document.querySelector('input[name="matingBreeder"]:checked');
-            if (matingBreeder) {
-                rabbitData.matingEligible = matingBreeder.value;
+            // Save the data in the list
+            const cageNumber = elements.rabbitForm.dataset.cageNumber;
+            rabbitDataList[cageNumber] = rabbitData;
+
+            alert("Rabbit data saved successfully!"); // Notify user of successful save
+            console.log(rabbitDataList); // Debugging: log saved data to console
+            resetFields(); // Reset form fields after saving
+            goHome(); // Return to home page
+        }
+
+        function loadData(cageNumber) {
+            const rabbitData = rabbitDataList[cageNumber];
+            if (rabbitData) {
+                for (const [key, value] of Object.entries(rabbitData)) {
+                    const inputElement = elements.rabbitForm.querySelector(`[name="${key}"]`);
+                    if (inputElement) {
+                        if (inputElement.type === 'radio') {
+                            inputElement.checked = (inputElement.value === value);
+                        } else {
+                            inputElement.value = value;
+                        }
+                    }
+                }
+                toggleProfileFields(); // Ensure correct fields are displayed
             }
-
-            // Log the data to the console for verification
-            console.log("Rabbit Data Saved:", rabbitData);
-
-            // Show a success message
-            alert("Rabbit data saved!");
-            goHome();
         }
 
         function clearForm() {
-            resetFields();
+            resetFields(); // Clear all fields
+        }
+
+        function deleteRabbitData() {
+            const cageNumber = elements.rabbitForm.dataset.cageNumber;
+            rabbitDataList[cageNumber] = null; // Remove data for this cage
+            alert("Cage data deleted successfully!"); // Notify user of successful deletion
+            resetFields(); // Reset form fields
+            goHome(); // Return to home page
         }
 
         function addCage() {
             cageCount++;
             const cageButton = document.createElement('button');
-            cageButton.innerText = `Cage ${cageCount}`;
-            cageButton.onclick = function() { showCageDetails(cageCount); };
+            cageButton.textContent = `Cage ${cageCount}`;
+            cageButton.type = 'button';
+            cageButton.onclick = () => showCageDetails(cageCount);
             elements.cageButtons.appendChild(cageButton);
-        }
-
-        function loadData(cageNumber) {
-            // Load cage data (stub for actual data loading logic)
-            console.log(`Loading data for Cage ${cageNumber}`);
-        }
-
-        function deleteRabbitData() {
-            // Implement delete functionality here
-            alert("Delete function is not implemented yet.");
         }
     </script>
 </body>
