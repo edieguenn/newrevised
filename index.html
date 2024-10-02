@@ -111,10 +111,14 @@
                 <button type="button" onclick="clearForm()">CLEAR FORM</button>
                 <button type="button" onclick="goHome()">CANCEL</button>
             </div>
+            <div class="buttons">
+                <button type="button" onclick="deleteRabbitData()">DELETE CAGE DATA</button>
+            </div>
         </form>
     </div>
 
     <div id="homePage" class="cage-list" style="display: block;">
+        <h2>CAGE MANAGEMENT</h2>
         <button onclick="showCageDetails(1)">CAGE 1</button>
         <button onclick="showCageDetails(2)">CAGE 2</button>
         <button onclick="showCageDetails(3)">CAGE 3</button>
@@ -238,26 +242,16 @@
             newButton.textContent = `CAGE ${newCageNumber}`;
             newButton.setAttribute('onclick', `showCageDetails(${newCageNumber})`);
 
-            // Create delete button
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'DELETE';
-            deleteButton.onclick = function() {
-                deleteCage(newCageNumber);
-            };
-
             // Add buttons to the cage buttons container
             elements.cageButtons.appendChild(newButton);
-            elements.cageButtons.appendChild(deleteButton);
         }
 
-        function deleteCage(cageNumber) {
+        function deleteRabbitData() {
+            const cageNumber = elements.rabbitForm.dataset.cageNumber;
             localStorage.removeItem(`cageData${cageNumber}`); // Remove data from localStorage
-            const cageButton = Array.from(elements.cageButtons.children).find(
-                (button) => button.textContent.startsWith(`CAGE ${cageNumber}`)
-            );
-            if (cageButton) {
-                elements.cageButtons.removeChild(cageButton); // Remove the cage button
-            }
+            resetFields(); // Reset form fields after deletion
+            alert("Cage data deleted successfully.");
+            goHome(); // Return to home page
         }
     </script>
 </body>
