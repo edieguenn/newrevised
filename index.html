@@ -185,47 +185,57 @@
     <div id="homePage" class="cage-list" style="display: block;">
         <h2>CAGE MANAGEMENT</h2>
         <ul id="cageList"></ul> <!-- Container for dynamic cage list -->
+        <button type="button" onclick="add
         <button type="button" onclick="addCage()">ADD CAGE</button>
     </div>
 
     <script>
-        let cageCounter = 0; // Track the number of cages
-
+        // Function to navigate to homepage
         function goHome() {
-            document.getElementById("homePage").style.display = "block";
             document.getElementById("cageDetails").style.display = "none";
+            document.getElementById("homePage").style.display = "block";
         }
 
-        // Add Cage Function (only on homepage)
+        // Function to add a cage
         function addCage() {
-            cageCounter++;
             const cageList = document.getElementById("cageList");
+            const cageId = `cage-${Date.now()}`;
             const cageItem = document.createElement("li");
-            cageItem.innerHTML = `CAGE ${cageCounter} <button onclick="openCage(${cageCounter})">OPEN</button>`;
+            cageItem.id = cageId;
+            cageItem.innerHTML = `
+                Cage ${cageList.children.length + 1}
+                <button onclick="openCage('${cageId}')">Open</button>
+            `;
             cageList.appendChild(cageItem);
         }
 
-        // Open Cage Details Function
-        function openCage(cageNumber) {
-            document.getElementById("homePage").style.display = "none";
+        // Function to open a specific cage
+        function openCage(cageId) {
             document.getElementById("cageDetails").style.display = "block";
-            document.getElementById("rabbitForm").reset();
-            // Reset fields visibility
-            document.getElementById("doeFields").style.display = "none";
-            document.getElementById("fattenerSection").style.display = "none";
-            document.getElementById("breederSection").style.display = "none";
+            document.getElementById("homePage").style.display = "none";
+            // Store current cage id for later actions (delete, etc.)
+            document.getElementById("rabbitForm").dataset.cageId = cageId;
         }
 
-        // Function to delete cage data (inside rabbit profile)
+        // Function to delete a cage
         function deleteCageData() {
-            if (confirm("Are you sure you want to delete this cage?")) {
-                document.getElementById("rabbitForm").reset(); // Reset the form fields
-                alert("Cage data has been deleted.");
-                goHome(); // Go back to homepage after deleting
+            const cageId = document.getElementById("rabbitForm").dataset.cageId;
+            if (cageId) {
+                const cageItem = document.getElementById(cageId);
+                if (cageItem) {
+                    cageItem.remove();
+                    alert('Cage deleted successfully!');
+                    goHome(); // Go back to the homepage after deletion
+                }
             }
         }
 
-        // Toggle profile fields based on selected profile
+        // Function to clear the form
+        function clearForm() {
+            document.getElementById("rabbitForm").reset();
+        }
+
+        // Function to toggle form fields based on profile type
         function toggleProfileFields() {
             const profile = document.getElementById("profile").value;
             document.getElementById("doeFields").style.display = profile === "doe" ? "block" : "none";
@@ -233,17 +243,64 @@
             document.getElementById("breederSection").style.display = profile === "breeder" ? "block" : "none";
         }
 
+        // Function to save form data
         function saveData(event) {
             event.preventDefault();
-            alert("Rabbit data has been saved.");
+            alert('Rabbit data saved successfully!');
         }
 
-        function clearForm() {
-            document.getElementById("rabbitForm").reset();
-            // Resetting visibility of fields
-            document.getElementById("doeFields").style.display = "none";
-            document.getElementById("fattenerSection").style.display = "none";
-            document.getElementById("breederSection").style.display = "none";
+        // Mating Eligibility Logic for Rabbit Breeder
+        function checkMatingEligibility() {
+            const dob = document.getElementById("dateOfBirthBreeder").value;
+            const ageInMonths = calculateAgeInMonths(dob);
+
+            const message = document.getElementById("matingEligibilityMessage");
+            if (ageInMonths >= 6) {
+                message.innerHTML = "<p style='color: green;'>This rabbit is eligible for mating.</p>";
+            } else {
+                message.innerHTML = "<p style='color: red;'>This rabbit is not eligible for mating.</p>";
+            }
+            message.style.display = "block";
+        }
+
+        // Meat Production Readiness Logic for Rabbit Fattener
+        function checkMeatProduction() {
+            const dob = document.getElementById("dateOfBirthFattener").value;
+            const ageInMonths = calculateAgeInMonths(dob);
+
+            const readyForMeat = document.getElementById("readyForMeat");
+            const notReadyForMeat = document.getElementById("notReadyForMeat");
+            if (ageInMonths >= 3) {
+                readyForMeat.style.display = "block";
+                notReadyForMeat.style.display = "none";
+            } else {
+                readyForMeat.style.display = "none";
+                notReadyForMeat.style.display = "block";
+            }
+        }
+
+        // Pregnancy Date Calculation Logic
+        function togglePregnancyDetails(isPregnant) {
+            const details = document.getElementById("pregnancyDetails");
+            details.style.display = isPregnant ? "block" : "none";
+        }
+
+        function calculateDueDate(type) {
+            const pregnancyStart = document.getElementById(`pregnancyStart${type}`).value;
+            if (pregnancyStart) {
+                const startDate = new Date(pregnancyStart);
+                const dueDate = new Date(startDate.setDate(startDate.getDate() + 31)); // 31-day gestation
+                const formattedDueDate = dueDate.toISOString().split("T")[0];
+                document.getElementById(`dueDate${type}`).value = formattedDueDate;
+            }
+        }
+
+        // Utility function to calculate age in months
+        function calculateAgeInMonths(dob) {
+            const dobDate = new Date(dob);
+            const today = new Date();
+            const ageInMonths = (today.getFullYear() - dobDate.getFullYear()) * 12 + today.getMonth() - dobDate.getMonth();
+            return ageInMonths;
         }
     </script>
 </body>
