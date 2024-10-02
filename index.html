@@ -26,17 +26,80 @@
 
             <!-- Rabbit Doe Fields -->
             <div id="doeFields" style="display: none;">
-                <!-- Fields related to Rabbit Doe -->
+                <div>
+                    <label for="serialNumber">SERIAL NUMBER:</label>
+                    <input type="text" id="serialNumber" name="serialNumber">
+                </div>
+                <div>
+                    <label for="age">AGE:</label>
+                    <input type="text" id="age" name="age">
+                </div>
+                <div>
+                    <label for="dateOfBirth">DATE OF BIRTH:</label>
+                    <input type="date" id="dateOfBirth" name="dateOfBirth">
+                </div>
+                <div>
+                    <label for="gender">GENDER:</label>
+                    <select id="gender" name="gender">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="family">RABBIT FAMILY:</label>
+                    <input type="text" id="family" name="family">
+                </div>
+                <div>
+                    <label for="foodIntake">FOOD INTAKE:</label>
+                    <label><input type="radio" name="foodIntakeDoe" value="normal"> NORMAL</label>
+                    <label><input type="radio" name="foodIntakeDoe" value="irregular"> IRREGULAR</label>
+                </div>
+                <div>
+                    <label for="weight">WEIGHT:</label>
+                    <input type="text" id="weight" name="weight">
+                </div>
+                <div id="pregnantSection" style="display: none;">
+                    <label>PREGNANT:</label>
+                    <label><input type="radio" name="pregnantDoe" value="yes" onclick="togglePregnancyDetails(true)"> YES</label>
+                    <label><input type="radio" name="pregnantDoe" value="no" onclick="togglePregnancyDetails(false)"> NO</label>
+                    <div id="pregnancyDetails" style="display: none;">
+                        <div>
+                            <label for="pregnancyStartDoe">START OF PREGNANCY:</label>
+                            <input type="date" id="pregnancyStartDoe" name="pregnancyStartDoe" onchange="calculateDueDate('Doe')">
+                        </div>
+                        <div>
+                            <label for="dueDateDoe">DUE DATE OF PREGNANCY:</label>
+                            <input type="text" id="dueDateDoe" name="dueDateDoe" readonly>
+                        </div>
+                    </div>
+                    <div id="notReadyMessage" style="display: none;">
+                        <p>This rabbit is not ready for pregnancy.</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Rabbit Fattener Section -->
             <div id="fattenerSection" style="display: none;">
-                <!-- Fields related to Rabbit Fattener -->
+                <div>
+                    <label for="foodIntakeFattener">FOOD INTAKE:</label>
+                    <label><input type="radio" name="foodIntakeFattener" value="normal"> NORMAL</label>
+                    <label><input type="radio" name="foodIntakeFattener" value="irregular"> IRREGULAR</label>
+                </div>
+                <div id="readyForMeat" style="display: none;">
+                    <p>This rabbit is ready for meat production.</p>
+                </div>
+                <div id="notReadyForMeat" style="display: none;">
+                    <p style="font-weight: bold; border: 2px solid black; padding: 5px;">This rabbit is not ready for meat production.</p>
+                </div>
             </div>
 
             <!-- Rabbit Breeder Section -->
             <div id="breederSection" style="display: none;">
-                <!-- Fields related to Rabbit Breeder -->
+                <div>
+                    <label>ELIGIBLE FOR MATING:</label>
+                    <label><input type="radio" name="matingBreeder" value="yes"> YES</label>
+                    <label><input type="radio" name="matingBreeder" value="no"> NO</label>
+                </div>
             </div>
 
             <div>
