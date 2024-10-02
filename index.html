@@ -6,6 +6,8 @@
     <title>Rabbit Cage Management</title>
     <link rel="stylesheet" href="styles.css">
     <script>
+        const cages = [];
+
         function toggleProfileFields() {
             const profile = document.getElementById('profile').value;
             document.getElementById('doeFields').style.display = profile === 'doe' ? 'block' : 'none';
@@ -46,7 +48,32 @@
 
         function saveData(event) {
             event.preventDefault();
-            // Implement the logic to save the data
+            const profile = document.getElementById('profile').value;
+
+            const serialNumber = document.getElementById(`serialNumber${profile.charAt(0).toUpperCase() + profile.slice(1)}`).value;
+            const breeds = document.getElementById(`breeds${profile.charAt(0).toUpperCase() + profile.slice(1)}`).value;
+            const age = document.getElementById(`age${profile.charAt(0).toUpperCase() + profile.slice(1)}`).value;
+            const dateOfBirth = document.getElementById(`dateOfBirth${profile.charAt(0).toUpperCase() + profile.slice(1)}`).value;
+            const gender = document.getElementById(`gender${profile.charAt(0).toUpperCase() + profile.slice(1)}`).value;
+            const family = document.getElementById(`family${profile.charAt(0).toUpperCase() + profile.slice(1)}`).value;
+            const foodIntake = document.querySelector(`input[name="foodIntake${profile.charAt(0).toUpperCase() + profile.slice(1)}"]:checked`).value;
+            const weight = document.getElementById(`weight${profile.charAt(0).toUpperCase() + profile.slice(1)}`).value;
+
+            // Add data to cages array
+            cages.push({ serialNumber, breeds, age, dateOfBirth, gender, family, foodIntake, weight, profile });
+            displayCages();
+            clearForm();
+        }
+
+        function displayCages() {
+            const cageList = document.getElementById('cageList');
+            cageList.innerHTML = '';
+
+            cages.forEach((cage, index) => {
+                const li = document.createElement('li');
+                li.textContent = `Cage ${index + 1}: ${cage.serialNumber}, ${cage.profile}`;
+                cageList.appendChild(li);
+            });
         }
 
         function clearForm() {
@@ -54,8 +81,9 @@
             toggleProfileFields();
         }
 
-        function deleteCage() {
-            // Implement the logic to delete the cage
+        function deleteCage(index) {
+            cages.splice(index, 1);
+            displayCages();
         }
     </script>
 </head>
@@ -65,7 +93,12 @@
         <span>Rabbit Cage Management</span>
     </header>
 
-    <div id="cageDetails">
+    <div id="homePage">
+        <h2>Welcome to Rabbit Cage Management</h2>
+        <button onclick="goToCageDetails()">Manage Cages</button>
+    </div>
+
+    <div id="cageDetails" style="display: none;">
         <form id="rabbitForm" onsubmit="saveData(event)">
             <!-- Profile Selector -->
             <div>
@@ -80,36 +113,36 @@
             <!-- Rabbit Doe Fields -->
             <div id="doeFields" style="display: none;">
                 <div>
-                    <label for="serialNumber">SERIAL NUMBER:</label>
-                    <input type="text" id="serialNumber" name="serialNumber">
+                    <label for="serialNumberDoe">SERIAL NUMBER:</label>
+                    <input type="text" id="serialNumberDoe" name="serialNumberDoe">
                 </div>
                 <div>
-                    <label for="age">AGE:</label>
-                    <input type="text" id="age" name="age">
+                    <label for="ageDoe">AGE:</label>
+                    <input type="text" id="ageDoe" name="ageDoe">
                 </div>
                 <div>
-                    <label for="dateOfBirth">DATE OF BIRTH:</label>
-                    <input type="date" id="dateOfBirth" name="dateOfBirth">
+                    <label for="dateOfBirthDoe">DATE OF BIRTH:</label>
+                    <input type="date" id="dateOfBirthDoe" name="dateOfBirthDoe">
                 </div>
                 <div>
-                    <label for="gender">GENDER:</label>
-                    <select id="gender" name="gender" required>
+                    <label for="genderDoe">GENDER:</label>
+                    <select id="genderDoe" name="genderDoe" required>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                     </select>
                 </div>
                 <div>
-                    <label for="family">RABBIT FAMILY:</label>
-                    <input type="text" id="family" name="family">
+                    <label for="familyDoe">RABBIT FAMILY:</label>
+                    <input type="text" id="familyDoe" name="familyDoe">
                 </div>
                 <div>
-                    <label for="foodIntake">FOOD INTAKE:</label>
+                    <label for="foodIntakeDoe">FOOD INTAKE:</label>
                     <label><input type="radio" name="foodIntakeDoe" value="normal"> NORMAL</label>
                     <label><input type="radio" name="foodIntakeDoe" value="irregular"> IRREGULAR</label>
                 </div>
                 <div>
-                    <label for="weight">WEIGHT:</label>
-                    <input type="text" id="weight" name="weight">
+                    <label for="weightDoe">WEIGHT:</label>
+                    <input type="text" id="weightDoe" name="weightDoe">
                 </div>
                 <div id="pregnantSection" style="display: block;">
                     <label>PREGNANT:</label>
@@ -138,8 +171,8 @@
                     <input type="text" id="serialNumberFattener" name="serialNumberFattener" required>
                 </div>
                 <div>
-                    <label for="breeds">BREEDS:</label>
-                    <input type="text" id="breeds" name="breeds">
+                    <label for="breedsFattener">BREEDS:</label>
+                    <input type="text" id="breedsFattener" name="breedsFattener">
                 </div>
                 <div>
                     <label for="ageFattener">AGE:</label>
@@ -168,12 +201,6 @@
                 <div>
                     <label for="weightFattener">WEIGHT:</label>
                     <input type="text" id="weightFattener" name="weightFattener">
-                </div>
-                <div id="readyForMeat" style="display: none;">
-                    <p>This rabbit is ready for meat production.</p>
-                </div>
-                <div id="notReadyForMeat" style="display: none;">
-                    <p style="font-weight: bold; border: 2px solid black; padding: 5px;">This rabbit is not ready for meat production.</p>
                 </div>
             </div>
 
