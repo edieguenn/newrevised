@@ -249,6 +249,10 @@
         function deleteRabbitData() {
             const cageNumber = elements.rabbitForm.dataset.cageNumber;
             localStorage.removeItem(`cageData${cageNumber}`); // Remove data from localStorage
+            const cageButton = document.querySelector(`.cage-list button[onclick="showCageDetails(${cageNumber})"]`);
+            if (cageButton) {
+                elements.cageButtons.removeChild(cageButton); // Remove the button from the DOM
+            }
             resetFields(); // Reset form fields after deletion
             alert("Cage data deleted successfully.");
             goHome(); // Return to home page
