@@ -186,7 +186,7 @@
                 </div>
                 <div>
                     <label for="dateOfBirthFattener">DATE OF BIRTH:</label>
-                    <input type="date" id="dateOfBirthFattener" name="dateOfBirthFattener" onchange="checkFattenerReadiness()">
+                    <input type="date" id="dateOfBirthFattener" name="dateOfBirthFattener">
                 </div>
                 <div>
                     <label for="genderFattener">GENDER:</label>
@@ -252,24 +252,15 @@
                     <p>This rabbit is eligible for mating.</p>
                 </div>
                 <div id="breederNotReadyMessage" style="display: none;">
-                    <p>This rabbit is not eligible for mating.</p>
+                    <p>This rabbit is not ready for mating.</p>
                 </div>
             </div>
 
-            <!-- Save and Clear buttons -->
-            <div>
-                <button type="submit">SAVE</button>
-                <button type="button" onclick="clearForm()">CLEAR</button>
-            </div>
+            <button type="submit">Save</button>
         </form>
 
-        <!-- Cage Management Section -->
-        <h2>Manage Rabbit Cages</h2>
-        <div>
-            <button onclick="addCage()">ADD CAGE</button>
-            <ul id="cageList"></ul>
-        </div>
-        <button onclick="goHome()">BACK</button>
+        <h2>Cages:</h2>
+        <ul id="cageList"></ul>
     </div>
 </body>
 </html>
