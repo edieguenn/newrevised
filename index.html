@@ -41,7 +41,7 @@
             document.getElementById('homePage').style.display = 'block';
         }
 
-        function goBack() {
+        function goToCageDetails() {
             document.getElementById('homePage').style.display = 'none';
             document.getElementById('cageDetails').style.display = 'block';
         }
@@ -120,7 +120,7 @@
             <div id="doeFields" style="display: none;">
                 <div>
                     <label for="serialNumberDoe">SERIAL NUMBER:</label>
-                    <input type="text" id="serialNumberDoe" name="serialNumberDoe">
+                    <input type="text" id="serialNumberDoe" name="serialNumberDoe" required>
                 </div>
                 <div>
                     <label for="ageDoe">AGE:</label>
@@ -186,7 +186,7 @@
                 </div>
                 <div>
                     <label for="dateOfBirthFattener">DATE OF BIRTH:</label>
-                    <input type="date" id="dateOfBirthFattener" name="dateOfBirthFattener" onchange="checkBreederReadiness()">
+                    <input type="date" id="dateOfBirthFattener" name="dateOfBirthFattener" onchange="checkFattenerReadiness()">
                 </div>
                 <div>
                     <label for="genderFattener">GENDER:</label>
@@ -269,7 +269,7 @@
             <button onclick="addCage()">ADD CAGE</button>
             <ul id="cageList"></ul>
         </div>
-        <button onclick="goBack()">BACK</button>
+        <button onclick="goHome()">BACK</button>
     </div>
 </body>
 </html>
