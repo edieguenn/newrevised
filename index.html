@@ -40,7 +40,7 @@
                 </div>
                 <div>
                     <label for="gender">GENDER:</label>
-                    <select id="gender" name="gender">
+                    <select id="gender" name="gender" required>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                     </select>
@@ -58,7 +58,7 @@
                     <label for="weight">WEIGHT:</label>
                     <input type="text" id="weight" name="weight">
                 </div>
-                <div id="pregnantSection" style="display: none;">
+                <div id="pregnantSection" style="display: block;">
                     <label>PREGNANT:</label>
                     <label><input type="radio" name="pregnantDoe" value="yes" onclick="togglePregnancyDetails(true)"> YES</label>
                     <label><input type="radio" name="pregnantDoe" value="no" onclick="togglePregnancyDetails(false)"> NO</label>
@@ -209,29 +209,36 @@
             event.preventDefault();
             const cageNumber = elements.rabbitForm.dataset.cageNumber;
             const data = new FormData(elements.rabbitForm);
-            const obj = Object.fromEntries(data.entries()); // Convert FormData to Object
+            const obj = Object.fromEntries(data.entries()); // Convert FormData to object
+
             localStorage.setItem(`cageData${cageNumber}`, JSON.stringify(obj));
-            goHome();
+            goHome(); // Redirect to home after saving
         }
 
         function loadData(cageNumber) {
-            const data = JSON.parse(localStorage.getItem(`cageData${cageNumber}`));
+            const data = localStorage.getItem(`cageData${cageNumber}`);
             if (data) {
-                Object.entries(data).forEach(([key, value]) => {
-                    const field = elements.rabbitForm.elements[key];
-                    if (field) {
-                        if (field.type === 'radio') {
-                            field.value === value && (field.checked = true);
-                        } else {
-                            field.value = value;
-                        }
+                const obj = JSON.parse(data);
+                for (const key in obj) {
+                    if (elements.rabbitForm[key]) {
+                        elements.rabbitForm[key].value = obj[key];
                     }
-                });
-                elements.profileSelect.value = data['profile'];
-                toggleProfileFields();
-            } else {
-                resetFields();
+                }
             }
+        }
+
+        function togglePregnancyDetails(isPregnant) {
+            elements.pregnancyDetails.style.display = isPregnant ? 'block' : 'none';
+            elements.notReadyMessage.style.display = isPregnant ? 'none' : 'block';
+        }
+
+        function calculateDueDate(profile) {
+            const startDateInput = document.getElementById(`pregnancyStart${profile}`);
+            const dueDateInput = document.getElementById(`dueDate${profile}`);
+            const startDate = new Date(startDateInput.value);
+            const dueDate = new Date(startDate);
+            dueDate.setDays(dueDate.getDate() + 30); // Assuming a 30-day gestation period
+            dueDateInput.value = dueDate.toLocaleDateString(); // Format the date as needed
         }
     </script>
 </body>
