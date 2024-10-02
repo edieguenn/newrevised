@@ -32,7 +32,6 @@
 
         function saveData(event) {
             event.preventDefault(); // Prevent form submission for demonstration
-            // Here, you can add the logic to save the data
             alert("Data saved!");
         }
 
@@ -50,7 +49,10 @@
         }
 
         // Call toggleProfileFields initially to set correct display
-        window.onload = toggleProfileFields;
+        window.onload = function() {
+            toggleProfileFields(); // Set initial field display
+            document.getElementById("cageDetails").style.display = "block"; // Show the form section
+        };
     </script>
 </head>
 <body>
@@ -59,7 +61,7 @@
         <span>Rabbit Cage Management</span>
     </header>
 
-    <div id="cageDetails" style="display: none;">
+    <div id="cageDetails" style="display: block;"> <!-- Set to block -->
         <form id="rabbitForm" onsubmit="saveData(event)">
             <!-- Profile Selector -->
             <div>
@@ -187,7 +189,7 @@
                 </div>
                 <div>
                     <label for="dateOfBirthBreeder">DATE OF BIRTH:</label>
-                    <input type="date" id="dateOfBirthBreeder" name="dateOfBirthBreeder" onchange="checkBreederEligibility()" required>
+                    <input type="date" id="dateOfBirthBreeder" name="dateOfBirthBreeder" onchange="checkBreederEligibility()">
                 </div>
                 <div>
                     <label for="genderBreeder">GENDER:</label>
