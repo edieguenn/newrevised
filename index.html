@@ -188,90 +188,79 @@
             elements.homePage.style.display = 'none';
             elements.cageDetails.style.display = 'block';
             loadData(cageNumber);
-            elements.rabbitForm.dataset.cageNumber = cageNumber;
         }
 
         function addCage() {
             cageCount++;
-            const button = document.createElement('button');
-            button.textContent = `CAGE ${cageCount}`;
-            button.onclick = () => showCageDetails(cageCount);
-            elements.cageButtons.appendChild(button);
+            const cageButton = document.createElement('button');
+            cageButton.innerText = `CAGE ${cageCount}`;
+            cageButton.onclick = () => showCageDetails(cageCount);
+            elements.cageButtons.appendChild(cageButton);
+            resetFields(); // Reset fields when adding a new cage
         }
 
-        function toggleProfileFields() {
-            const selectedProfile = elements.profileSelect.value;
-
-            // Hide all profile sections initially
+        function resetFields() {
+            elements.rabbitForm.reset();
             elements.doeFields.style.display = 'none';
             elements.fattenerSection.style.display = 'none';
             elements.breederSection.style.display = 'none';
+            elements.notReadyMessage.style.display = 'none';
             elements.readyForMeat.style.display = 'none';
             elements.notReadyForMeat.style.display = 'none';
-            elements.notReadyMessage.style.display = 'none';
             elements.pregnancyDetails.style.display = 'none';
+        }
 
-            if (selectedProfile === 'doe') {
+        function loadData(cageNumber) {
+            const data = rabbitDataList[cageNumber - 1] || {};
+            // Load data into the form fields
+            elements.profileSelect.value = data.profile || "doe"; // Set default profile if undefined
+            elements.rabbitForm.serialNumber.value = data.serialNumber || "";
+            elements.rabbitForm.age.value = data.age || "";
+            elements.rabbitForm.dateOfBirth.value = data.dateOfBirth || "";
+            elements.rabbitForm.gender.value = data.gender || "";
+            elements.rabbitForm.family.value = data.family || "";
+            elements.rabbitForm.weight.value = data.weight || "";
+            elements.rabbitForm.foodIntakeDoe.value = data.foodIntake || "";
+
+            // Show the appropriate fields
+            toggleProfileFields(); // Call this function to show/hide fields based on selected profile
+        }
+
+        function toggleProfileFields() {
+            const profileValue = elements.profileSelect.value;
+            // Reset visibility of all sections
+            elements.doeFields.style.display = 'none';
+            elements.fattenerSection.style.display = 'none';
+            elements.breederSection.style.display = 'none';
+
+            // Show fields based on selected profile
+            if (profileValue === 'doe') {
                 elements.doeFields.style.display = 'block';
-            } else if (selectedProfile === 'fattener') {
+            } else if (profileValue === 'fattener') {
                 elements.fattenerSection.style.display = 'block';
-            } else if (selectedProfile === 'breeder') {
+            } else if (profileValue === 'breeder') {
                 elements.breederSection.style.display = 'block';
             }
         }
 
         function saveData(event) {
-            event.preventDefault(); // Prevent form submission
+            event.preventDefault();
+            const currentCageNumber = Array.from(elements.cageButtons.children).findIndex(
+                button => button.innerText.includes(`CAGE ${cageCount}`)) + 1;
 
-            const formData = new FormData(elements.rabbitForm);
-            const rabbitData = {};
-            formData.forEach((value, key) => {
-                rabbitData[key] = value;
-            });
+            const rabbitData = {
+                profile: elements.profileSelect.value,
+                serialNumber: elements.rabbitForm.serialNumber.value,
+                age: elements.rabbitForm.age.value,
+                dateOfBirth: elements.rabbitForm.dateOfBirth.value,
+                gender: elements.rabbitForm.gender.value,
+                family: elements.rabbitForm.family.value,
+                weight: elements.rabbitForm.weight.value,
+                foodIntake: elements.rabbitForm.foodIntakeDoe.value,
+            };
 
-            rabbitDataList.push(rabbitData); // Save the rabbit data
-            alert('Rabbit data saved successfully!'); // Notify user
-            resetFields(); // Clear the fields
-            goHome(); // Go back to the home page
-        }
-
-        function loadData(cageNumber) {
-            const rabbitData = rabbitDataList[cageNumber - 1]; // Adjust for zero-based indexing
-            if (rabbitData) {
-                for (const key in rabbitData) {
-                    const input = elements.rabbitForm.elements[key];
-                    if (input) {
-                        input.value = rabbitData[key];
-                    }
-                }
-            }
-        }
-
-        function checkMeatProduction() {
-            const dateOfBirth = new Date(elements.rabbitForm.dateOfBirthFattener.value);
-            const today = new Date();
-            const ageInDays = Math.floor((today - dateOfBirth) / (1000 * 60 * 60 * 24));
-            const ageInMonths = ageInDays / 30;
-
-            if (ageInMonths >= 4) {
-                elements.readyForMeat.style.display = 'block';
-                elements.notReadyForMeat.style.display = 'none';
-            } else {
-                elements.readyForMeat.style.display = 'none';
-                elements.notReadyForMeat.style.display = 'block';
-            }
-        }
-
-        function calculateDueDate(profile) {
-            const startDate = new Date(elements.rabbitForm[`pregnancyStart${profile}`].value);
-            const dueDate = new Date(startDate);
-            dueDate.setDate(startDate.getDate() + 30); // Assuming 30 days gestation period
-            elements.rabbitForm[`dueDate${profile}`].value = dueDate.toISOString().split('T')[0]; // Format the date
-        }
-
-        function togglePregnancyDetails(isPregnant) {
-            elements.pregnancyDetails.style.display = isPregnant ? 'block' : 'none';
-            elements.notReadyMessage.style.display = !isPregnant ? 'block' : 'none';
+            rabbitDataList[currentCageNumber - 1] = rabbitData; // Save data in the list
+            alert('Data saved successfully!');
         }
 
         function clearForm() {
@@ -279,23 +268,41 @@
             resetFields();
         }
 
-        function resetFields() {
-            elements.doeFields.style.display = 'none';
-            elements.fattenerSection.style.display = 'none';
-            elements.breederSection.style.display = 'none';
-            elements.readyForMeat.style.display = 'none';
-            elements.notReadyForMeat.style.display = 'none';
-            elements.notReadyMessage.style.display = 'none';
-            elements.pregnancyDetails.style.display = 'none';
+        function deleteRabbitData() {
+            const currentCageNumber = Array.from(elements.cageButtons.children).findIndex(
+                button => button.innerText.includes(`CAGE ${cageCount}`)) + 1;
+
+            rabbitDataList[currentCageNumber - 1] = {}; // Clear data for the cage
+            alert('Cage data deleted!');
+            resetFields();
         }
 
-        function deleteRabbitData() {
-            const cageNumber = elements.rabbitForm.dataset.cageNumber;
-            if (cageNumber) {
-                rabbitDataList[cageNumber - 1] = null; // Remove data for the selected cage
-                alert(`Cage ${cageNumber} data deleted!`);
-                clearForm(); // Clear form fields
-                goHome(); // Go back to the home page
+        function togglePregnancyDetails(show) {
+            elements.pregnancyDetails.style.display = show ? 'block' : 'none';
+        }
+
+        function calculateDueDate(type) {
+            const startDate = document.getElementById(`pregnancyStart${type}`);
+            const dueDateField = document.getElementById(`dueDate${type}`);
+            if (startDate.value) {
+                const start = new Date(startDate.value);
+                const dueDate = new Date(start.setMonth(start.getMonth() + 4)); // Assuming a 4-month pregnancy
+                dueDateField.value = dueDate.toISOString().split('T')[0]; // Format to YYYY-MM-DD
+            }
+        }
+
+        function checkMeatProduction() {
+            const dateOfBirthField = document.getElementById('dateOfBirthFattener');
+            const currentDate = new Date();
+            if (dateOfBirthField.value) {
+                const ageInMonths = (currentDate - new Date(dateOfBirthField.value)) / (1000 * 60 * 60 * 24 * 30);
+                if (ageInMonths >= 6) {
+                    elements.readyForMeat.style.display = 'block';
+                    elements.notReadyForMeat.style.display = 'none';
+                } else {
+                    elements.notReadyForMeat.style.display = 'block';
+                    elements.readyForMeat.style.display = 'none';
+                }
             }
         }
     </script>
