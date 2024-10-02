@@ -71,7 +71,13 @@
 
             cages.forEach((cage, index) => {
                 const li = document.createElement('li');
-                li.textContent = `Cage ${index + 1}: ${cage.serialNumber}, ${cage.profile}`;
+                li.textContent = `Cage ${index + 1}: Serial Number: ${cage.serialNumber}, Profile: ${cage.profile}`;
+                
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.onclick = () => deleteCage(index);
+                
+                li.appendChild(deleteButton);
                 cageList.appendChild(li);
             });
         }
@@ -180,7 +186,7 @@
                 </div>
                 <div>
                     <label for="dateOfBirthFattener">DATE OF BIRTH:</label>
-                    <input type="date" id="dateOfBirthFattener" name="dateOfBirthFattener" onchange="checkReadiness()">
+                    <input type="date" id="dateOfBirthFattener" name="dateOfBirthFattener" onchange="checkBreederReadiness()">
                 </div>
                 <div>
                     <label for="genderFattener">GENDER:</label>
@@ -257,9 +263,12 @@
             </div>
         </form>
 
-        <!-- Cage List Section -->
-        <h2>Rabbit Cages</h2>
-        <ul id="cageList"></ul>
+        <!-- Cage Management Section -->
+        <h2>Manage Rabbit Cages</h2>
+        <div>
+            <button onclick="addCage()">ADD CAGE</button>
+            <ul id="cageList"></ul>
+        </div>
         <button onclick="goBack()">BACK</button>
     </div>
 </body>
