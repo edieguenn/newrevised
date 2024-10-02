@@ -81,9 +81,21 @@
             <!-- Rabbit Fattener Section -->
             <div id="fattenerSection" style="display: none;">
                 <div>
+                    <label for="serialNumberFattener">SERIAL NUMBER:</label>
+                    <input type="text" id="serialNumberFattener" name="serialNumberFattener">
+                </div>
+                <div>
+                    <label for="ageFattener">AGE:</label>
+                    <input type="text" id="ageFattener" name="ageFattener">
+                </div>
+                <div>
                     <label for="foodIntakeFattener">FOOD INTAKE:</label>
                     <label><input type="radio" name="foodIntakeFattener" value="normal"> NORMAL</label>
                     <label><input type="radio" name="foodIntakeFattener" value="irregular"> IRREGULAR</label>
+                </div>
+                <div>
+                    <label for="weightFattener">WEIGHT:</label>
+                    <input type="text" id="weightFattener" name="weightFattener">
                 </div>
                 <div id="readyForMeat" style="display: none;">
                     <p>This rabbit is ready for meat production.</p>
@@ -237,7 +249,7 @@
             const dueDateInput = document.getElementById(`dueDate${profile}`);
             const startDate = new Date(startDateInput.value);
             const dueDate = new Date(startDate);
-            dueDate.setDays(dueDate.getDate() + 30); // Assuming a 30-day gestation period
+            dueDate.setDate(dueDate.getDate() + 30); // Assuming a 30-day gestation period
             dueDateInput.value = dueDate.toLocaleDateString(); // Format the date as needed
         }
     </script>
