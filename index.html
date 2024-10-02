@@ -82,11 +82,30 @@
             <div id="fattenerSection" style="display: none;">
                 <div>
                     <label for="serialNumberFattener">SERIAL NUMBER:</label>
-                    <input type="text" id="serialNumberFattener" name="serialNumberFattener">
+                    <input type="text" id="serialNumberFattener" name="serialNumberFattener" required>
+                </div>
+                <div>
+                    <label for="breeds">BREEDS:</label>
+                    <input type="text" id="breeds" name="breeds">
                 </div>
                 <div>
                     <label for="ageFattener">AGE:</label>
                     <input type="text" id="ageFattener" name="ageFattener">
+                </div>
+                <div>
+                    <label for="dateOfBirthFattener">DATE OF BIRTH:</label>
+                    <input type="date" id="dateOfBirthFattener" name="dateOfBirthFattener" onchange="checkReadiness()">
+                </div>
+                <div>
+                    <label for="genderFattener">GENDER:</label>
+                    <select id="genderFattener" name="genderFattener" required>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="familyFattener">RABBIT FAMILY:</label>
+                    <input type="text" id="familyFattener" name="familyFattener">
                 </div>
                 <div>
                     <label for="foodIntakeFattener">FOOD INTAKE:</label>
@@ -147,6 +166,8 @@
             doeFields: document.getElementById('doeFields'),
             fattenerSection: document.getElementById('fattenerSection'),
             breederSection: document.getElementById('breederSection'),
+            readyForMeat: document.getElementById('readyForMeat'),
+            notReadyForMeat: document.getElementById('notReadyForMeat'),
             cageButtons: document.getElementById('cageButtons'),
         };
 
@@ -210,11 +231,15 @@
         function resetFields() {
             elements.rabbitForm.reset();
             toggleProfileFields(); // Reset visibility of profile fields
+            elements.readyForMeat.style.display = 'none';
+            elements.notReadyForMeat.style.display = 'none';
         }
 
         function clearForm() {
             elements.rabbitForm.reset(); // Clears the entire form
             toggleProfileFields(); // Reset profile-specific fields visibility
+            elements.readyForMeat.style.display = 'none';
+            elements.notReadyForMeat.style.display = 'none';
         }
 
         function saveData(event) {
@@ -236,12 +261,31 @@
                         elements.rabbitForm[key].value = obj[key];
                     }
                 }
+                // Check if the rabbit in the fattener profile is ready for meat production
+                if (obj.profile === 'fattener') {
+                    checkReadiness(obj.dateOfBirthFattener);
+                }
             }
         }
 
         function togglePregnancyDetails(isPregnant) {
             elements.pregnancyDetails.style.display = isPregnant ? 'block' : 'none';
             elements.notReadyMessage.style.display = isPregnant ? 'none' : 'block';
+        }
+
+        function checkReadiness() {
+            const dateOfBirthInput = document.getElementById('dateOfBirthFattener');
+            const dob = new Date(dateOfBirthInput.value);
+            const now = new Date();
+            const ageInWeeks = Math.floor((now - dob) / (1000 * 60 * 60 * 24 * 7));
+
+            if (ageInWeeks >= 12) {
+                elements.readyForMeat.style.display = 'block';
+                elements.notReadyForMeat.style.display = 'none';
+            } else {
+                elements.readyForMeat.style.display = 'none';
+                elements.notReadyForMeat.style.display = 'block';
+            }
         }
 
         function calculateDueDate(profile) {
