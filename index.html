@@ -174,18 +174,128 @@
                 <button type="button" onclick="clearForm()">CLEAR FORM</button>
                 <button type="button" onclick="goHome()">CANCEL</button>
             </div>
+            <div class="buttons">
+                <button type="button" onclick="deleteRabbitData()">DELETE CAGE DATA</button>
+            </div>
         </form>
-        <div class="buttons">
-            <button type="button" onclick="deleteRabbitData()">DELETE CAGE DATA</button>
-        </div>
     </div>
 
     <div id="homePage" class="cage-list" style="display: block;">
-        <h2>CAGES</h2>
-        <ul id="cageList"></ul>
-        <button onclick="addCage()">ADD CAGE</button>
+        <h2>CAGE MANAGEMENT</h2>
+        <ul id="cageList"></ul> <!-- Container for dynamic cage list -->
+        <button type="button" onclick="addCage()">ADD CAGE</button>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        let cageCounter = 0; // Track the number of cages
+
+        function goHome() {
+            document.getElementById("homePage").style.display = "block";
+            document.getElementById("cageDetails").style.display = "none";
+        }
+
+        function addCage() {
+            cageCounter++;
+            const cageList = document.getElementById("cageList");
+            const cageItem = document.createElement("li");
+            cageItem.innerHTML = `CAGE ${cageCounter} <button onclick="openCage(${cageCounter})">OPEN</button> <button onclick="deleteCage(${cageCounter})">DELETE</button>`;
+            cageList.appendChild(cageItem);
+        }
+
+        function deleteCage(cageNumber) {
+            const cageList = document.getElementById("cageList");
+            cageList.removeChild(cageList.children[cageNumber - 1]);
+            cageCounter--;
+            reindexCages();
+        }
+
+        function reindexCages() {
+            const cageList = document.getElementById("cageList");
+            for (let i = 0; i < cageList.children.length; i++) {
+                cageList.children[i].innerHTML = `CAGE ${i + 1} <button onclick="openCage(${i + 1})">OPEN</button> <button onclick="deleteCage(${i + 1})">DELETE</button>`;
+            }
+        }
+
+        function openCage(cageNumber) {
+            document.getElementById("homePage").style.display = "none";
+            document.getElementById("cageDetails").style.display = "block";
+            document.getElementById("rabbitForm").reset();
+            // Reset fields visibility
+            document.getElementById("doeFields").style.display = "none";
+            document.getElementById("fattenerSection").style.display = "none";
+            document.getElementById("breederSection").style.display = "none";
+            document.getElementById("pregnancyDetails").style.display = "none";
+            document.getElementById("notReadyMessage").style.display = "none";
+            document.getElementById("readyForMeat").style.display = "none";
+            document.getElementById("notReadyForMeat").style.display = "none";
+            document.getElementById("matingEligibilityMessage").style.display = "none";
+        }
+
+        function toggleProfileFields() {
+            const profile = document.getElementById("profile").value;
+            document.getElementById("doeFields").style.display = profile === "doe" ? "block" : "none";
+            document.getElementById("fattenerSection").style.display = profile === "fattener" ? "block" : "none";
+            document.getElementById("breederSection").style.display = profile === "breeder" ? "block" : "none";
+        }
+
+        function saveData(event) {
+            event.preventDefault();
+            // Save the rabbit data logic here. For now, you can store it in local storage or process it as needed.
+            alert("Rabbit data has been saved.");
+        }
+
+        function deleteRabbitData() {
+            if (confirm("Are you sure you want to delete the data for this cage?")) {
+                // Logic to clear the rabbit data
+                document.getElementById("rabbitForm").reset();
+                alert("Cage data has been deleted.");
+            }
+        }
+
+        function clearForm() {
+            document.getElementById("rabbitForm").reset();
+            // Resetting visibility of fields
+            document.getElementById("doeFields").style.display = "none";
+            document.getElementById("fattenerSection").style.display = "none";
+            document.getElementById("breederSection").style.display = "none";
+        }
+
+        function calculateDueDate(rabbitType) {
+            const startDate = document.getElementById(`pregnancyStart${rabbitType}`).value;
+            if (startDate) {
+                const dueDate = new Date(startDate);
+                dueDate.setDate(dueDate.getDate() + 31); // Assuming a 31-day gestation period
+                document.getElementById(`dueDate${rabbitType}`).value = dueDate.toISOString().split('T')[0];
+            }
+        }
+
+        function checkMatingEligibility() {
+            const dateOfBirth = new Date(document.getElementById("dateOfBirthBreeder").value);
+            const currentDate = new Date();
+            const ageInMonths = (currentDate - dateOfBirth) / (1000 * 60 * 60 * 24 * 30);
+            const eligibilityMessage = document.getElementById("matingEligibilityMessage");
+            eligibilityMessage.style.display = "block";
+            if (ageInMonths >= 6) {
+                eligibilityMessage.textContent = "This rabbit is eligible for mating.";
+            } else {
+                eligibilityMessage.textContent = "This rabbit is not eligible for mating.";
+            }
+        }
+
+        function checkMeatProduction() {
+            const dateOfBirth = new Date(document.getElementById("dateOfBirthFattener").value);
+            const currentDate = new Date();
+            const ageInMonths = (currentDate - dateOfBirth) / (1000 * 60 * 60 * 24 * 30);
+            const readyForMeat = document.getElementById("readyForMeat");
+            const notReadyForMeat = document.getElementById("notReadyForMeat");
+
+            readyForMeat.style.display = ageInMonths >= 3 ? "block" : "none";
+            notReadyForMeat.style.display = ageInMonths < 3 ? "block" : "none";
+        }
+
+        function togglePregnancyDetails(isPregnant) {
+            document.getElementById("pregnancyDetails").style.display = isPregnant ? "block" : "none";
+        }
+    </script>
 </body>
 </html>
