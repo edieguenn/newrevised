@@ -5,6 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rabbit Cage Management</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Add your CSS styles here if needed */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        header button {
+            margin-right: 20px;
+        }
+        form {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+        .buttons button {
+            margin-right: 10px;
+        }
+        p {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -12,8 +43,36 @@
         <span>Rabbit Cage Management</span>
     </header>
 
-    <div id="cageDetails" style="display: none;">
+    <div id="cageDetails">
+        <form id="cageForm" onsubmit="saveCageData(event)">
+            <h2>Cage Management</h2>
+            <div>
+                <label for="cageID">CAGE ID:</label>
+                <input type="text" id="cageID" name="cageID" required>
+            </div>
+            <div>
+                <label for="cageLocation">CAGE LOCATION:</label>
+                <input type="text" id="cageLocation" name="cageLocation" required>
+            </div>
+            <div>
+                <label for="cageCapacity">CAGE CAPACITY:</label>
+                <input type="number" id="cageCapacity" name="cageCapacity" required>
+            </div>
+            <div>
+                <label for="noteCage">NOTE:</label>
+                <textarea id="noteCage" name="noteCage"></textarea>
+            </div>
+            <div class="buttons">
+                <button type="submit">SAVE CAGE</button>
+                <button type="button" onclick="clearCageForm()">CLEAR CAGE FORM</button>
+            </div>
+            <p id="cageSuccessMessage" style="display: none;">Cage data saved successfully!</p>
+        </form>
+    </div>
+
+    <div id="rabbitFormContainer" style="display: none;">
         <form id="rabbitForm" onsubmit="saveData(event)">
+            <h2>Rabbit Profiles</h2>
             <!-- Profile Selector -->
             <div>
                 <label for="profile">RABBIT PROFILE:</label>
@@ -29,15 +88,15 @@
             <div id="doeFields" style="display: none;">
                 <div>
                     <label for="serialNumber">SERIAL NUMBER:</label>
-                    <input type="text" id="serialNumber" name="serialNumber">
+                    <input type="text" id="serialNumber" name="serialNumber" required>
                 </div>
                 <div>
                     <label for="age">AGE:</label>
-                    <input type="text" id="age" name="age">
+                    <input type="text" id="age" name="age" required>
                 </div>
                 <div>
                     <label for="dateOfBirth">DATE OF BIRTH:</label>
-                    <input type="date" id="dateOfBirth" name="dateOfBirth">
+                    <input type="date" id="dateOfBirth" name="dateOfBirth" required>
                 </div>
                 <div>
                     <label for="gender">GENDER:</label>
@@ -48,7 +107,7 @@
                 </div>
                 <div>
                     <label for="family">RABBIT FAMILY:</label>
-                    <input type="text" id="family" name="family">
+                    <input type="text" id="family" name="family" required>
                 </div>
                 <div>
                     <label>FOOD INTAKE:</label>
@@ -57,7 +116,7 @@
                 </div>
                 <div>
                     <label for="weight">WEIGHT:</label>
-                    <input type="text" id="weight" name="weight">
+                    <input type="text" id="weight" name="weight" required>
                 </div>
                 <div id="pregnantSection">
                     <label>PREGNANT:</label>
@@ -83,19 +142,19 @@
             <div id="fattenerSection" style="display: none;">
                 <div>
                     <label for="serialNumberFattener">SERIAL NUMBER:</label>
-                    <input type="text" id="serialNumberFattener" name="serialNumberFattener">
+                    <input type="text" id="serialNumberFattener" name="serialNumberFattener" required>
                 </div>
                 <div>
                     <label for="breeds">BREEDS:</label>
-                    <input type="text" id="breeds" name="breeds">
+                    <input type="text" id="breeds" name="breeds" required>
                 </div>
                 <div>
                     <label for="ageFattener">AGE:</label>
-                    <input type="text" id="ageFattener" name="ageFattener">
+                    <input type="text" id="ageFattener" name="ageFattener" required>
                 </div>
                 <div>
                     <label for="dateOfBirthFattener">DATE OF BIRTH:</label>
-                    <input type="date" id="dateOfBirthFattener" name="dateOfBirthFattener" onchange="checkMeatProduction()">
+                    <input type="date" id="dateOfBirthFattener" name="dateOfBirthFattener" onchange="checkMeatProduction()" required>
                 </div>
                 <div>
                     <label for="genderFattener">GENDER:</label>
@@ -106,7 +165,7 @@
                 </div>
                 <div>
                     <label for="familyFattener">RABBIT FAMILY:</label>
-                    <input type="text" id="familyFattener" name="familyFattener">
+                    <input type="text" id="familyFattener" name="familyFattener" required>
                 </div>
                 <div>
                     <label>FOOD INTAKE:</label>
@@ -115,7 +174,7 @@
                 </div>
                 <div>
                     <label for="weightFattener">WEIGHT:</label>
-                    <input type="text" id="weightFattener" name="weightFattener">
+                    <input type="text" id="weightFattener" name="weightFattener" required>
                 </div>
                 <div id="readyForMeat" style="display: none;">
                     <p>This rabbit is ready for meat production.</p>
@@ -129,19 +188,19 @@
             <div id="breederSection" style="display: none;">
                 <div>
                     <label for="serialNumberBreeder">SERIAL NUMBER:</label>
-                    <input type="text" id="serialNumberBreeder" name="serialNumberBreeder">
+                    <input type="text" id="serialNumberBreeder" name="serialNumberBreeder" required>
                 </div>
                 <div>
                     <label for="breedsBreeder">BREEDS:</label>
-                    <input type="text" id="breedsBreeder" name="breedsBreeder">
+                    <input type="text" id="breedsBreeder" name="breedsBreeder" required>
                 </div>
                 <div>
                     <label for="ageBreeder">AGE:</label>
-                    <input type="text" id="ageBreeder" name="ageBreeder">
+                    <input type="text" id="ageBreeder" name="ageBreeder" required>
                 </div>
                 <div>
                     <label for="dateOfBirthBreeder">DATE OF BIRTH:</label>
-                    <input type="date" id="dateOfBirthBreeder" name="dateOfBirthBreeder" onchange="checkBreederEligibility()">
+                    <input type="date" id="dateOfBirthBreeder" name="dateOfBirthBreeder" onchange="checkBreederEligibility()" required>
                 </div>
                 <div>
                     <label for="genderBreeder">GENDER:</label>
@@ -152,7 +211,7 @@
                 </div>
                 <div>
                     <label for="familyBreeder">RABBIT FAMILY:</label>
-                    <input type="text" id="familyBreeder" name="familyBreeder">
+                    <input type="text" id="familyBreeder" name="familyBreeder" required>
                 </div>
                 <div>
                     <label>FOOD INTAKE:</label>
@@ -161,141 +220,89 @@
                 </div>
                 <div>
                     <label for="weightBreeder">WEIGHT:</label>
-                    <input type="text" id="weightBreeder" name="weightBreeder">
+                    <input type="text" id="weightBreeder" name="weightBreeder" required>
                 </div>
-                <div id="breederEligibilityMessage" style="display: none;"></div>
+                <div id="eligibleMessage" style="display: none;">
+                    <p>This rabbit is eligible for mating.</p>
+                </div>
+                <div id="notEligibleMessage" style="display: none;">
+                    <p>This rabbit is not eligible for mating.</p>
+                </div>
             </div>
 
-            <div>
-                <label for="note">NOTE:</label>
-                <textarea id="note" name="note"></textarea>
-            </div>
             <div class="buttons">
-                <button type="submit">SUBMIT</button>
-                <button type="button" onclick="clearForm()">CLEAR FORM</button>
-                <button type="button" onclick="goHome()">CANCEL</button>
+                <button type="submit">SAVE RABBIT PROFILE</button>
+                <button type="button" onclick="clearRabbitForm()">CLEAR RABBIT FORM</button>
             </div>
-            <p id="successMessage" style="display: none;">Data saved successfully!</p>
+            <p id="successMessage" style="display: none;">Rabbit profile saved successfully!</p>
         </form>
     </div>
 
     <script>
-        function toggleProfileFields() {
-            const profile = document.getElementById("profile").value;
-            const doeFields = document.getElementById("doeFields");
-            const fattenerFields = document.getElementById("fattenerSection");
-            const breederFields = document.getElementById("breederSection");
-
-            doeFields.style.display = profile === "doe" ? "block" : "none";
-            fattenerFields.style.display = profile === "fattener" ? "block" : "none";
-            breederFields.style.display = profile === "breeder" ? "block" : "none";
-
-            // Clear fields when changing profile
-            if (profile !== "doe") {
-                clearDoeFields();
-            }
-            if (profile !== "fattener") {
-                clearFattenerFields();
-            }
-            if (profile !== "breeder") {
-                clearBreederFields();
-            }
-        }
-
-        function clearDoeFields() {
-            document.getElementById("serialNumber").value = "";
-            document.getElementById("age").value = "";
-            document.getElementById("dateOfBirth").value = "";
-            document.getElementById("gender").value = "male";
-            document.getElementById("family").value = "";
-            document.getElementsByName("foodIntakeDoe")[0].checked = false;
-            document.getElementById("weight").value = "";
-            document.getElementById("pregnantSection").style.display = "none";
-            document.getElementById("notReadyMessage").style.display = "none";
-            document.getElementById("dueDateDoe").value = "";
-        }
-
-        function clearFattenerFields() {
-            document.getElementById("serialNumberFattener").value = "";
-            document.getElementById("breeds").value = "";
-            document.getElementById("ageFattener").value = "";
-            document.getElementById("dateOfBirthFattener").value = "";
-            document.getElementById("genderFattener").value = "male";
-            document.getElementById("familyFattener").value = "";
-            document.getElementsByName("foodIntakeFattener")[0].checked = false;
-            document.getElementById("weightFattener").value = "";
-            document.getElementById("readyForMeat").style.display = "none";
-            document.getElementById("notReadyForMeat").style.display = "none";
-        }
-
-        function clearBreederFields() {
-            document.getElementById("serialNumberBreeder").value = "";
-            document.getElementById("breedsBreeder").value = "";
-            document.getElementById("ageBreeder").value = "";
-            document.getElementById("dateOfBirthBreeder").value = "";
-            document.getElementById("genderBreeder").value = "male";
-            document.getElementById("familyBreeder").value = "";
-            document.getElementsByName("foodIntakeBreeder")[0].checked = false;
-            document.getElementById("weightBreeder").value = "";
-            document.getElementById("breederEligibilityMessage").style.display = "none";
-        }
-
         function goHome() {
-            // Logic to navigate home
-            alert("Going Home");
+            // Logic to go to the home page
+        }
+
+        function saveCageData(event) {
+            event.preventDefault();
+            // Add logic to save cage data
+            document.getElementById('cageSuccessMessage').style.display = 'block';
+        }
+
+        function clearCageForm() {
+            document.getElementById('cageForm').reset();
+            document.getElementById('cageSuccessMessage').style.display = 'none';
         }
 
         function saveData(event) {
             event.preventDefault();
-            // Logic to save data
-            document.getElementById("successMessage").style.display = "block";
-            clearForm();
+            // Add logic to save rabbit data
+            document.getElementById('successMessage').style.display = 'block';
         }
 
-        function clearForm() {
-            document.getElementById("rabbitForm").reset();
-            clearDoeFields();
-            clearFattenerFields();
-            clearBreederFields();
-            document.getElementById("successMessage").style.display = "none";
-            document.getElementById("cageDetails").style.display = "none";
+        function clearRabbitForm() {
+            document.getElementById('rabbitForm').reset();
+            document.getElementById('successMessage').style.display = 'none';
+        }
+
+        function toggleProfileFields() {
+            const profile = document.getElementById('profile').value;
+            document.getElementById('doeFields').style.display = profile === 'doe' ? 'block' : 'none';
+            document.getElementById('fattenerSection').style.display = profile === 'fattener' ? 'block' : 'none';
+            document.getElementById('breederSection').style.display = profile === 'breeder' ? 'block' : 'none';
+        }
+
+        function togglePregnancyDetails(show) {
+            document.getElementById('pregnancyDetails').style.display = show ? 'block' : 'none';
+            document.getElementById('notReadyMessage').style.display = !show ? 'block' : 'none';
         }
 
         function calculateDueDate(type) {
-            const startDate = document.getElementById(`pregnancyStart${type}`).value;
-            const dueDateInput = document.getElementById(`dueDate${type}`);
-            if (startDate) {
-                const start = new Date(startDate);
-                const dueDate = new Date(start);
-                dueDate.setDate(start.getDate() + 30); // Assuming 30 days for simplicity
-                dueDateInput.value = dueDate.toISOString().split('T')[0];
-            } else {
-                dueDateInput.value = "";
-            }
+            const dateField = type === 'Doe' ? document.getElementById('pregnancyStartDoe') : document.getElementById('pregnancyStartFattener');
+            const dueDateField = type === 'Doe' ? document.getElementById('dueDateDoe') : document.getElementById('dueDateFattener');
+            const startDate = new Date(dateField.value);
+            const dueDate = new Date(startDate.setDate(startDate.getDate() + 30)); // assuming 30 days pregnancy
+            dueDateField.value = dueDate.toISOString().split('T')[0];
         }
 
         function checkMeatProduction() {
-            const dateOfBirth = new Date(document.getElementById("dateOfBirthFattener").value);
-            const today = new Date();
-            const ageInDays = Math.floor((today - dateOfBirth) / (1000 * 60 * 60 * 24));
-            const readyForMeat = document.getElementById("readyForMeat");
-            const notReadyForMeat = document.getElementById("notReadyForMeat");
-            if (ageInDays >= 90) { // Assuming 90 days to be ready for meat production
-                readyForMeat.style.display = "block";
-                notReadyForMeat.style.display = "none";
-            } else {
-                readyForMeat.style.display = "none";
-                notReadyForMeat.style.display = "block";
-            }
+            // Logic to check if the rabbit is ready for meat production
         }
 
         function checkBreederEligibility() {
-            const dateOfBirth = new Date(document.getElementById("dateOfBirthBreeder").value);
-            const today = new Date();
-            const ageInMonths = Math.floor((today - dateOfBirth) / (1000 * 60 * 60 * 24 * 30));
-            const eligibilityMessage = document.getElementById("breederEligibilityMessage");
-            eligibilityMessage.style.display = "block";
-            eligibilityMessage.innerText = ageInMonths >= 6 ? "This rabbit is eligible for mating." : "This rabbit is not eligible for mating.";
+            const dateOfBirth = new Date(document.getElementById('dateOfBirthBreeder').value);
+            const eligibilityMessage = document.getElementById('eligibleMessage');
+            const notEligibleMessage = document.getElementById('notEligibleMessage');
+            const currentDate = new Date();
+            const ageInMonths = (currentDate - dateOfBirth) / (1000 * 60 * 60 * 24 * 30); // convert ms to months
+
+            if (ageInMonths >= 6) {
+                eligibilityMessage.style.display = 'block';
+                notEligibleMessage.style.display = 'none';
+            } else {
+                eligibilityMessage.style.display = 'none';
+                notEligibleMessage.style.display = 'block';
+            }
         }
     </script>
 </body>
