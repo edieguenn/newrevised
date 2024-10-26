@@ -374,8 +374,6 @@
         <button onclick="addNewCage()">ADD NEW CAGE</button> <!-- Add New Cage Button -->
     </div>
     
-    </head>
-<body>
     <header> 
         <span id="headerTitle">RABBIT PROFILE</span>
     </header>
@@ -412,7 +410,6 @@
             <button onclick="changeProfilePicture()">Upload</button>
         </div>
     </div>
-    
     
     <script>
     let totalCages = 6; // Keeps track of the total number of cages
@@ -514,25 +511,16 @@
         document.getElementById('matingEligibility').innerText = eligibilityMessage;
     }
 
-    function goToRabbitProfile(){
-      const cageNumber = document.getElementById('rabbitForm').dataset.cageNumber || 1;
-      const form = document.getElementById('rabbitForm');
-      const data = new FormData(form);
-      
-      // Prepare the data to be stored
-      
-      const rabbitData = {};
-      data.forEach((value, key) => {
-        rabbitData[key] = value;
-    });
-    rabbitData.cageNumber = cageNumber;
-    
-    // store the data in localStorage or sessionStorage
-    
-    localStorage.setItem('rabbitProfile', JSON.stringify(rabbitData));
-    
-  
+    function goToRabbitProfile() {
+    // Logic to display rabbit profile
+    document.getElementById('cageDetails').style.display = 'none';
+    document.getElementById('homePage').style.display = 'none';
+    document.getElementById('pregnancyOption').style.display = 'none';
+    document.getElementById('pregnancyDetails').style.display = 'block'; // Assuming this is where the profile shows
+    document.getElementById('headerTitle').innerHTML = '<strong>RABBIT PROFILE</strong>'; // Update header title
+}
 
+    
     // New function to delete cage data
     function deleteCage() {
         const cageNumber = document.getElementById('rabbitForm').dataset.cageNumber;
