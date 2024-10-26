@@ -537,7 +537,16 @@
     function deleteCage() {
         const cageNumber = document.getElementById('rabbitForm').dataset.cageNumber;
         if (confirm(`Are you sure you want to delete data for Cage ${cageNumber}?`)) {
+            
+            // Remove from localStorage
             localStorage.removeItem(`rabbitData${cageNumber}`);
+            
+            // Find and remove the corresponding button for the cage
+            const cageButton = document.querySelector('#homePage button[onclick = "showCageDetails(${cageNumber})"]');
+            if (cageButton) {
+              cageButton.remove();  // Remove the cage button from UI
+            }
+            
             alert(`Data for Cage ${cageNumber} has been deleted.`);
             goHome();
         }
