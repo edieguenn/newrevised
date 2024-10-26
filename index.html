@@ -521,24 +521,28 @@
 }
 
     
-    // New function to delete cage data
     function deleteCage() {
-        const cageNumber = document.getElementById('rabbitForm').dataset.cageNumber;
-        if (confirm(`Are you sure you want to delete data for Cage ${cageNumber}?`)) {
-            
-            // Remove from localStorage
-            localStorage.removeItem(`rabbitData${cageNumber}`);
-            
-            // Find and remove the corresponding button for the cage
-            const cageButton = document.querySelector('#homePage button[onclick = "showCageDetails(${cageNumber})"]');
-            if (cageButton) {
-              cageButton.remove();  
-            }
-            
+    const cageNumber = document.getElementById('rabbitForm').dataset.cageNumber;
+    console.log(`Attempting to delete data for Cage ${cageNumber}`);
+
+    if (confirm(`Are you sure you want to delete data for Cage ${cageNumber}?`)) {
+        // Remove from localStorage
+        localStorage.removeItem(`rabbitData${cageNumber}`);
+        
+        // Find and remove the corresponding button for the cage
+        const cageButton = document.querySelector(`#homePage button[onclick="showCageDetails(${cageNumber})"]`);
+        console.log(cageButton); // Check if the button is found
+        if (cageButton) {
+            cageButton.remove();  
             alert(`Data for Cage ${cageNumber} has been deleted.`);
-            goHome();
+        } else {
+            alert(`No button found for Cage ${cageNumber}.`);
         }
+        
+        goHome();
     }
+}
+
 
     // New function to add a new cage
     function addNewCage() {
@@ -595,7 +599,7 @@
         profileImg.src = data.profilePicture;
     } else {
         profileImg.src = 'https://tinyurl.com/2ybmu2yr'; // default image
-    };
+    }
 
         function showUploadPrompt() {
             document.getElementById('uploadModal').style.display = 'block';
