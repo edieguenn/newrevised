@@ -572,36 +572,10 @@
       }
     }
 
-
-
     function getCageNumberFromLocalData(){
       return localStorage.getItem('cageNumber');
     }
     
-    
-    
-    window.onload = function () {
-        let cageNumber = getCageNumberFromLocalData();
-        if (cageNumber) {
-            showCageDetails(cageNumber);
-        } else {
-            goHome();
-        }
-    }
-    
-    <script>
-    
-     window.onload = function() {
-            const rabbitData = JSON.parse(localStorage.getItem('rabbitProfile'));
-            
-            if (rabbitData) {
-              showRabbitDetails(rabbitData);
-            } else{
-              goHome();
-            } 
-            
-        };
-        
         function showRabbitDetails(rabbitData){
           // use the rabbitData object to display the profile 
           
@@ -720,6 +694,22 @@
             if (event.target == modal) {
                 closeUploadPrompt();
             }
+        }
+        
+        window.onload = function (){
+          let cageNumber = getCageNumberFromLocalData();
+          if (cageNumber) {
+            showCageDetails(cageNumber);
+          } else {
+              goHome(); 
+          }
+          
+          const rabbitData = JSON.parse(localStorage.getItem('rabbitProfile'));
+          if (rabbitData) {
+          } else {
+              goHome();  
+          }
+          };
         }
     </script>
 </body>
