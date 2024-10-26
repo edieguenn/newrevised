@@ -270,10 +270,10 @@
             }
         }
     </style>
-</head>
+    </head>
 <body>
     <header>
-        <button onclick="goHome()">&#x1F3E0;</button>
+        <button onclick="goHome()">&#x1F3E0;</button> 
         <span id="headerTitle">Rabbit Cage</span>
         <button onclick="goToRabbitProfile()">&#x1F407;</button>
     </header>
@@ -364,143 +364,352 @@
         </form>
     </div>
 
+    <div id="homePage" class="cage-list" style="display: none;">
+        <button onclick="showCageDetails(1)">CAGE 1</button>
+        <button onclick="showCageDetails(2)">CAGE 2</button>
+        <button onclick="showCageDetails(3)">CAGE 3</button>
+        <button onclick="showCageDetails(4)">CAGE 4</button>
+        <button onclick="showCageDetails(5)">CAGE 5</button>
+        <button onclick="showCageDetails(6)">CAGE 6</button>
+        <button onclick="addNewCage()">ADD NEW CAGE</button> <!-- Add New Cage Button -->
+    </div>
+    
+    </head>
+<body>
+    <header> 
+        <span id="headerTitle">RABBIT PROFILE</span>
+    </header>
+
+    <div class="profile-card">
+        <div class="profile-picture" id="profilePicture" onclick="showUploadPrompt()">
+            <img id="profileImg" alt="Rabbit Profile Picture"> <!-- Add id here -->
+        </div>
+        <h2 id="breed">Breed</h2>
+        <div class="profile-details">
+            <p><span class="label">Serial No.:</span> <span id="serial-no">Unknown</span></p>
+            <p><span class="label">Cage No.:</span> <span id="cage-no">1</span></p>
+            <p><span class="label">Age:</span> <span id="age">Unknown</span></p>
+            <p><span class="label">Gender:</span> <span id="gender">Unknown</span></p>
+            <p><span class="label">Rabbit Type:</span> <span id="rabbit-type">Unknown</span></p>
+            <p><span class="label">Weight:</span> <span id="weight">Unknown</span></p>
+            <p><span class="label">Family:</span> <span id="family">Unknown</span></p>
+            <p><span class="label">Food Intake:</span> <span id="food-intake">Unknown</span></p>
+            <p><span class="label">Pregnancy Start:</span> <span id="pregnancy-start">Unknown</span></p>
+            <p><span class="label">Pregnancy Due:</span> <span id="pregnancy-due">Unknown</span></p>
+            <p><span class="label">Eligibility for Mating:</span> <span id="mating">Unknown</span></p>
+        </div>
+        <div>
+            <a href="https://jackdialogo.github.io/New/index.html?cage=1" class="edit-details" id="edit-link">Edit Details</a>
+        </div>
+    </div>
+
+    <!-- Modal for uploading a new picture -->
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeUploadPrompt()">&times;</span>
+            <h2>Change Profile Picture</h2>
+            <input type="file" id="fileInput" accept="image/*">
+            <button onclick="changeProfilePicture()">Upload</button>
+        </div>
+    </div>
+    
+    
     <script>
-        let totalCages = 6; // Keeps track of the total number of cages
+    let totalCages = 6; // Keeps track of the total number of cages
 
-        function goHome() {
-            document.getElementById('homePage').style.display = 'block';
-            document.getElementById('cageDetails').style.display = 'none';
-            document.getElementById('pregnancyOption').style.display = 'none';
-            document.getElementById('pregnancyDetails').style.display = 'none';
-            document.getElementById('headerTitle').innerHTML = '<strong>RABBIT CAGE</strong>'; // Reset header title
+    function goHome() {
+        document.getElementById('homePage').style.display = 'block';
+        document.getElementById('cageDetails').style.display = 'none';
+        document.getElementById('pregnancyOption').style.display = 'none';
+        document.getElementById('pregnancyDetails').style.display = 'none';
+        document.getElementById('headerTitle').innerHTML = '<strong>RABBIT CAGE</strong>'; // Reset header title
+    }
+
+    function showCageDetails(cageNumber) {
+        document.getElementById('homePage').style.display = 'none';
+        document.getElementById('cageDetails').style.display = 'block';
+        loadData(cageNumber);
+        document.getElementById('rabbitForm').dataset.cageNumber = cageNumber;
+        document.getElementById('headerTitle').innerHTML = `<strong>CAGE ${cageNumber}</strong>`;
+    }
+
+    function togglePregnancy(show) {
+        document.getElementById('pregnancyOption').style.display = show ? 'block' : 'none';
+        document.getElementById('pregnancyDetails').style.display = 'none'; // Hide pregnancy details if gender changes
+    }
+
+    function togglePregnancyDetails(show) {
+        document.getElementById('pregnancyDetails').style.display = show ? 'block' : 'none';
+    }
+
+    function saveData(event) {
+        event.preventDefault();
+        const form = document.getElementById('rabbitForm');
+        const cageNumber = form.dataset.cageNumber;
+        const data = new FormData(form);
+        const obj = {};
+        data.forEach((value, key) => {
+            obj[key] = value;
+        });
+        localStorage.setItem(`rabbitData${cageNumber}`, JSON.stringify(obj));
+        alert('Data saved successfully!');
+        goToRabbitProfile();
+    }
+
+    function checkMatingEligibility(birthDate) {
+        if (!birthDate) {
+            return "No Date of Birth Provided";
         }
 
-        function showCageDetails(cageNumber) {
-            document.getElementById('homePage').style.display = 'none';
-            document.getElementById('cageDetails').style.display = 'block';
-            loadData(cageNumber);
-            document.getElementById('rabbitForm').dataset.cageNumber = cageNumber;
-            document.getElementById('headerTitle').innerHTML = `<strong>CAGE ${cageNumber}</strong>`;
-        }
+        const birth = new Date(birthDate);
+        const today = new Date();
+        const diffInMonths = (today.getFullYear() - birth.getFullYear()) * 12 + (today.getMonth() - birth.getMonth());
 
-        function togglePregnancy(show) {
-            document.getElementById('pregnancyOption').style.display = show ? 'block' : 'none';
-            document.getElementById('pregnancyDetails').style.display = 'none'; // Hide pregnancy details if gender changes
-        }
+        if (diffInMonths >= 6) {
+            const nextEligibleDate = new Date(birth);
+            nextEligibleDate.setMonth(birth.getMonth() + 6);
 
-        function togglePregnancyDetails(show) {
-            document.getElementById('pregnancyDetails').style.display = show ? 'block' : 'none';
-        }
-
-        function saveData(event) {
-            event.preventDefault();
-            const form = document.getElementById('rabbitForm');
-            const cageNumber = form.dataset.cageNumber;
-            const data = new FormData(form);
-            const obj = {};
-            data.forEach((value, key) => {
-                obj[key] = value;
-            });
-            localStorage.setItem(`rabbitData${cageNumber}`, JSON.stringify(obj));
-            alert('Data saved successfully!');
-            goToRabbitProfile();
-        }
-
-        function checkMatingEligibility(birthDate) {
-            if (!birthDate) {
-                return "No Date of Birth Provided";
-            }
-
-            const birth = new Date(birthDate);
-            const today = new Date();
-            const diffInMonths = (today.getFullYear() - birth.getFullYear()) * 12 + (today.getMonth() - birth.getMonth());
-
-            if (diffInMonths >= 6) {
-                const nextEligibleDate = new Date(birth);
-                nextEligibleDate.setMonth(birth.getMonth() + 6);
-
-                if (diffInMonths % 3 === 0) {
-                    return "Eligible for Mating";
-                } else {
-                    return `Next eligible in ${3 - (diffInMonths % 3)} month(s)`;
-                }
+            if (diffInMonths % 3 === 0) {
+                return "Eligible for Mating";
             } else {
-                return `Not Eligible (Eligible in ${6 - diffInMonths} month(s))`;
+                return `Next eligible in ${3 - (diffInMonths % 3)} month(s)`;
             }
+        } else {
+            return `Not Eligible (Eligible in ${6 - diffInMonths} month(s))`;
+        }
+    }
+
+    function loadData(cageNumber) {
+        let data = JSON.parse(localStorage.getItem(`rabbitData${cageNumber}`)) || {};
+        document.getElementById('serialNumber').value = data.serialNumber || '';
+        document.getElementById('breed').value = data.breed || '';
+        document.getElementById('family').value = data.family || '';
+        document.getElementById('birthDate').value = data.birthDate || '';
+        document.getElementById('weight').value = data.weight || '';
+        document.getElementById('rabbitType').value = data.rabbitType || '';
+        
+        if (data.gender === "female") {
+            document.querySelector('input[name="gender"][value="female"]').checked = true;
+            togglePregnancy(true);
+        } else {
+            document.querySelector('input[name="gender"][value="male"]').checked = true;
+            togglePregnancy(false);
         }
 
-        function loadData(cageNumber) {
-            let data = JSON.parse(localStorage.getItem(`rabbitData${cageNumber}`)) || {};
-            document.getElementById('serialNumber').value = data.serialNumber || '';
-            document.getElementById('breed').value = data.breed || '';
-            document.getElementById('family').value = data.family || '';
-            document.getElementById('birthDate').value = data.birthDate || '';
-            document.getElementById('weight').value = data.weight || '';
-            document.getElementById('rabbitType').value = data.rabbitType || '';
+        if (data.pregnant === "yes") {
+            document.querySelector('input[name="pregnant"][value="yes"]').checked = true;
+            togglePregnancyDetails(true);
+        } else {
+            document.querySelector('input[name="pregnant"][value="no"]').checked = true;
+            togglePregnancyDetails(false);
+        }
+
+        document.getElementById('matedRabbit').value = data.matedRabbit || '';
+        document.getElementById('pregnancyStart').value = data.pregnancyStart || '';
+        document.getElementById('dueDate').value = data.dueDate || '';
+        document.querySelector(`input[name="foodIntake"][value="${data.foodIntake || 'normal'}"]`).checked = true;
+        document.getElementById('note').value = data.note || '';
+
+        const eligibilityMessage = checkMatingEligibility(data.birthDate);
+        document.getElementById('matingEligibility').innerText = eligibilityMessage;
+    }
+
+    function goToRabbitProfile(){
+      const cageNumber = document.getElementById('rabbitForm').dataset.cageNumber || 1;
+      const form = document.getElementById('rabbitForm');
+      const data = new FormData(form);
+      
+      // Prepare the data to be stored
+      
+      const rabbitData = {};
+      data.forEach((value, key) => {
+        rabbitData[key] = value;
+    });
+    rabbitData.cageNumber = cageNumber;
+    
+    // store the data in localStorage or sessionStorage
+    
+    localStorage.setItem('rabbitProfile', JSON.stringify(rabbitData));
+    
+  
+
+    // New function to delete cage data
+    function deleteCage() {
+        const cageNumber = document.getElementById('rabbitForm').dataset.cageNumber;
+        if (confirm(`Are you sure you want to delete data for Cage ${cageNumber}?`)) {
+            localStorage.removeItem(`rabbitData${cageNumber}`);
+            alert(`Data for Cage ${cageNumber} has been deleted.`);
+            goHome();
+        }
+    }
+
+    // New function to add a new cage
+    function addNewCage() {
+        totalCages++;
+        const homePage = document.getElementById('homePage');
+        const newCageButton = document.createElement('button');
+        newCageButton.textContent = `CAGE ${totalCages}`;
+        newCageButton.onclick = () => showCageDetails(totalCages);
+        homePage.insertBefore(newCageButton, homePage.lastElementChild);
+    }
+
+    function handleCageInput (){
+      let cageNumber = document.getElementById('cageInput').value;
+      if (cageNumber) {
+        showCageDetails(cageNumber);
+      } else {
+          goHome();  
+      
+      }
+    }
+
+
+
+    function getCageNumberFromLocalData(){
+      return localStorage.getItem('cageNumber');
+    }
+    
+    
+    
+    window.onload = function () {
+        let cageNumber = getCageNumberFromLocalData();
+        if (cageNumber) {
+            showCageDetails(cageNumber);
+        } else {
+            goHome();
+        }
+    }
+    
+    <script>
+    
+     window.onload = function() {
+            const rabbitData = JSON.parse(localStorage.getItem('rabbitProfile'));
             
-            if (data.gender === "female") {
-                document.querySelector('input[name="gender"][value="female"]').checked = true;
-                togglePregnancy(true);
+            if (rabbitData) {
+              showRabbitDetails(rabbitData);
+            } else{
+              goHome();
+            } 
+            
+        };
+        
+        function showRabbitDetails(rabbitData){
+          // use the rabbitData object to display the profile 
+          
+          console.log('Cage Number:', rabbitData.cageNumber);
+          console.log('Other Form Data:', rabbitData);
+        }
+            
+
+           // Load rabbit data from localStorage
+    const data = JSON.parse(localStorage.getItem(`rabbitData${cageNumber}`)) || {};
+
+    // Update profile details
+    document.getElementById('breed').innerText = data.breed || 'Unknown';
+    document.getElementById('serial-no').innerText = data.serialNumber || '';
+    document.getElementById('cage-no').innerText = cageNumber;
+    document.getElementById('age').innerText = calculateAge(data.birthDate) || '';
+    document.getElementById('gender').innerText = data.gender || 'Unknown';
+    document.getElementById('weight').innerText = data.weight || 'Unknown';
+    document.getElementById('family').innerText = data.family || 'Unknown';
+    document.getElementById('food-intake').innerText = data.foodIntake === "normal" ? "Normal" : "Irregular";
+    document.getElementById('pregnancy-start').innerText = data.pregnancyStart || '';
+    document.getElementById('pregnancy-due').innerText = data.dueDate || '';
+    document.getElementById('mating').innerText = data.matingEligibility || '';
+    document.getElementById('rabbit-type').innerText = data.rabbitType || 'Unknown';
+
+    // Set profile image if available
+    const profileImg = document.getElementById('profileImg');
+    if (data.profilePicture) {
+        profileImg.src = data.profilePicture;
+    } else {
+        profileImg.src = 'https://tinyurl.com/2ybmu2yr'; // default image
+    }
+};
+
+        function showUploadPrompt() {
+            document.getElementById('uploadModal').style.display = 'block';
+        }
+
+        function closeUploadPrompt() {
+            document.getElementById('uploadModal').style.display = 'none';
+        }
+
+        function changeProfilePicture() {
+            const fileInput = document.getElementById('fileInput');
+            const profileImg = document.getElementById('profileImg');
+            const params = new URLSearchParams(window.location.search);
+            const cageNumber = params.get('cage') || '1';
+
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    profileImg.src = e.target.result; // Update image source
+
+                    const data = JSON.parse(localStorage.getItem(`rabbitData${cageNumber}`)) || {};
+                    localStorage.setItem(`rabbitData${cageNumber}`, JSON.stringify({ ...data, profilePicture: e.target.result })); // Save to localStorage
+                };
+                reader.readAsDataURL(file);
+                closeUploadPrompt(); // Close the modal
             } else {
-                document.querySelector('input[name="gender"][value="male"]').checked = true;
-                togglePregnancy(false);
-            }
-
-            if (data.pregnant === "yes") {
-                document.querySelector('input[name="pregnant"][value="yes"]').checked = true;
-                togglePregnancyDetails(true);
-            } else {
-                document.querySelector('input[name="pregnant"][value="no"]').checked = true;
-                togglePregnancyDetails(false);
-            }
-
-            document.getElementById('matedRabbit').value = data.matedRabbit || '';
-            document.getElementById('pregnancyStart').value = data.pregnancyStart || '';
-            document.getElementById('dueDate').value = data.dueDate || '';
-            document.querySelector(`input[name="foodIntake"][value="${data.foodIntake || 'normal'}"]`).checked = true;
-            document.getElementById('note').value = data.note || '';
-
-            const eligibilityMessage = checkMatingEligibility(data.birthDate);
-            document.getElementById('matingEligibility').innerText = eligibilityMessage;
-        }
-
-        function goToRabbitProfile() {
-            const cageNumber = document.getElementById('rabbitForm').dataset.cageNumber || 1;
-            const form = document.getElementById('rabbitForm');
-            const data = new FormData(form);
-            const params = new URLSearchParams();
-            data.forEach((value, key) => {
-                params.append(key, value);
-            });
-            window.location.href = `rabbitinfo.html?cage=${cageNumber}&${params.toString()}`;
-        }
-
-        // New function to delete cage data
-        function deleteCage() {
-            const cageNumber = document.getElementById('rabbitForm').dataset.cageNumber;
-            if (confirm(`Are you sure you want to delete data for Cage ${cageNumber}?`)) {
-                localStorage.removeItem(`rabbitData${cageNumber}`);
-                alert(`Data for Cage ${cageNumber} has been deleted.`);
-                goHome();
+                alert("Please select a file.");
             }
         }
 
-        // New function to add a new cage
-        function addNewCage() {
-            totalCages++;
-            const homePage = document.getElementById('homePage');
-            const newCageButton = document.createElement('button');
-            newCageButton.textContent = `CAGE ${totalCages}`;
-            newCageButton.onclick = () => showCageDetails(totalCages);
-            homePage.insertBefore(newCageButton, homePage.lastElementChild);
+        function saveProfileData() {
+            const data = {
+                breed: document.getElementById('breed').innerText,
+                serialNumber: document.getElementById('serial-no').innerText,
+                cageNumber: document.getElementById('cage-no').innerText,
+                birthDate: document.getElementById('birthDate').value,
+                weight: document.getElementById('weight').innerText,
+                family: document.getElementById('family').innerText,
+                foodIntake: document.getElementById('food-intake').innerText,
+                pregnancyStart: document.getElementById('pregnancy-start').innerText,
+                dueDate: document.getElementById('pregnancy-due').innerText,
+                mating: document.getElementById('mating').innerText,
+                profilePicture: document.getElementById('profileImg').src,
+                rabbitType: document.getElementById('rabbit-type').innerText,
+            };
+
+            localStorage.setItem(`rabbitData${cageNumber}`, JSON.stringify(data));
         }
 
-        window.onload = function () {
-            let cageNumber = new URLSearchParams(window.location.search).get('cage');
-            if (cageNumber) {
-                showCageDetails(cageNumber);
-            } else {
-                goHome();
+        function saveRabbitData() {
+            const cageNumber = document.getElementById('cage-no').innerText;
+            const eligibilityForMating = document.getElementById('mating').innerText; 
+    
+            const data = JSON.parse(localStorage.getItem(`rabbitData${cageNumber}`)) || {};
+            data.matingEligibility = eligibilityForMating;
+            localStorage.setItem(`rabbitData${cageNumber}`, JSON.stringify(data));
+        }
+
+        function calculateAge(birthDate) {
+            if (!birthDate) return null;
+            
+            const today = new Date();
+            const birth = new Date(birthDate);
+            
+            const ageInMilliseconds = today - birth;
+            const ageInDays = Math.floor(ageInMilliseconds / (1000 * 60 * 60 * 24)); // Age in days
+            
+            // If age is less than 30 days, return in days
+            if (ageInDays < 30) {
+                return `${ageInDays} day(s)`;
+            }
+            
+            // Otherwise, calculate age in months
+            const ageInMonths = Math.floor(ageInDays / 30); // Approximate months
+            return `${ageInMonths} month(s)`;
+        }
+
+        // Click outside modal to close it
+        window.onclick = function(event) {
+            const modal = document.getElementById('uploadModal');
+            if (event.target == modal) {
+                closeUploadPrompt();
             }
         }
     </script>
