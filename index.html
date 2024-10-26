@@ -3,191 +3,506 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rabbit Cage Management</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Rabbit Farm</title>
+    <style>
+        /* General styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            background-image: url('https://tinyurl.com/2ybmu2yr');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding-top: 70px;
+        }
+
+        /* Header styling */
+        header {
+            background-color: rgba(76, 175, 80, 0.9);
+            color: white;
+            padding: 20px 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            border-radius: 8px;
+            position: relative;
+            z-index: 1000;
+        }
+
+        header button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            outline: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        header button:hover {
+            color: #FFD700;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+        }
+
+        #headerTitle {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Sidebar styling */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 200px;
+            height: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding-top: 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sidebar a {
+            color: white;
+            padding: 15px;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: #45a049;
+        }
+
+        /* Navbar styling */
+        .navbar {
+            width: calc(100% - 200px);
+            background-color: #333;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 200px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .navbar a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        /* Home page styling */
+        .cage-list-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%; /* Full height of the container to center vertically */
+            width: 100%;
+        }
+
+        .cage-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 15px;
+            width: 100%;
+            max-width: 300px;
+            padding: 20px;
+        }
+
+        .cage-list button {
+            background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent background */
+            color: #333;
+            border: 2px solid #4CAF50;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-size: 1.2em;
+            width: 100%;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .cage-list button:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /* Cage details form styling */
+        #cageDetails {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 20px;
+        }
+
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Updated shadow */
+            width: 80%;
+            max-width: 600px; /* Updated max-width */
+            display: flex;
+            flex-direction: column;
+            margin-top: 10px;
+        }
+
+        form div {
+            margin-bottom: 15px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        form input[type="text"],
+        form input[type="date"],
+        form textarea {
+            width: calc(100% - 10px);
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        form input[type="radio"] {
+            margin-right: 5px;
+        }
+
+        form .buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        form .buttons button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        form .buttons button:hover {
+            background-color: #45a049;
+        }
+
+        form .buttons button[type="button"] {
+            background-color: #f44336;
+        }
+
+        form .buttons button[type="button"]:hover {
+            background-color: #e53935;
+        }
+
+        /* Responsive styling */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding-top: 20px;
+            }
+
+            .navbar {
+                width: 100%;
+                left: 0;
+                height: auto;
+            }
+
+            .cage-list {
+                width: 90%;
+                max-width: none;
+            }
+
+            form {
+                width: 90%;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 10px;
+            }
+
+            .cage-list button {
+                font-size: 1em;
+                padding: 10px;
+            }
+
+            form {
+                width: 100%;
+            }
+
+            body {
+                font-size: 12px;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
         <button onclick="goHome()">&#x1F3E0;</button>
-        <span>Rabbit Cage Management</span>
+        <span id="headerTitle">Rabbit Cage</span>
+        <button onclick="goToRabbitProfile()">&#x1F407;</button>
     </header>
 
-    <div id="cageDetails" style="display: none;">
+    <div id="cageDetails">
         <form id="rabbitForm" onsubmit="saveData(event)">
-            <!-- Profile Selector -->
             <div>
-                <label for="profile">RABBIT PROFILE:</label>
-                <select id="profile" name="profile" onchange="toggleProfileFields()">
-                    <option value="doe">Rabbit Doe</option>
-                    <option value="fattener">Rabbit Fattener</option>
-                    <option value="breeder">Rabbit Breeder</option>
+                <label for="serialNumber">SERIAL NUMBER:</label>
+                <input type="text" id="serialNumber" name="serialNumber" required>
+            </div>
+            <div>
+                <label for="breed">BREED:</label>
+                <input type="text" id="breed" name="breed">
+            </div>
+            <div>
+                <label for="family">FAMILY:</label>
+                <input type="text" id="family" name="family">
+            </div>
+            <div>
+                <label for="birthDate">DATE OF BIRTH:</label>
+                <input type="date" id="birthDate" name="birthDate">
+            </div>
+            <div>
+                <label for="weight">WEIGHT:</label>
+                <input type="text" id="weight" name="weight">
+            </div>
+
+            <div>
+                <label for="rabbitType">RABBIT TYPE:</label>
+                <select id="rabbitType" name="rabbitType" required>
+                    <option value="">--Select Type--</option>
+                    <option value="fattener">Fattener</option>
+                    <option value="doe">Doe</option>
+                    <option value="breeder">Breeder</option>
                 </select>
             </div>
 
-            <!-- Rabbit Doe Fields -->
-            <div id="doeFields" style="display: none;">
+            <!-- Gender Section -->
+            <div>
+                <label for="gender">GENDER:</label>
+                <label><input type="radio" name="gender" value="male" onclick="togglePregnancy(false)"> MALE</label>
+                <label><input type="radio" name="gender" value="female" onclick="togglePregnancy(true)"> FEMALE</label>
+            </div>
+
+            <!-- Pregnant Option (only for Female) -->
+            <div id="pregnancyOption" style="display: none;">
+                <label>PREGNANT:</label>
+                <label><input type="radio" name="pregnant" value="yes" onclick="togglePregnancyDetails(true)"> YES</label>
+                <label><input type="radio" name="pregnant" value="no" onclick="togglePregnancyDetails(false)"> NO</label>
+            </div>
+
+            <!-- Pregnancy Details (shown if Pregnant is Yes) -->
+            <div id="pregnancyDetails" style="display: none;">
                 <div>
-                    <label for="serialNumber">SERIAL NUMBER:</label>
-                    <input type="text" id="serialNumber" name="serialNumber">
+                    <label for="matedRabbit">MATED RABBIT:</label>
+                    <input type="text" id="matedRabbit" name="matedRabbit">
                 </div>
                 <div>
-                    <label for="age">AGE:</label>
-                    <input type="text" id="age" name="age">
+                    <label for="pregnancyStart">START OF PREGNANCY:</label>
+                    <input type="date" id="pregnancyStart" name="pregnancyStart">
                 </div>
                 <div>
-                    <label for="dateOfBirth">DATE OF BIRTH:</label>
-                    <input type="date" id="dateOfBirth" name="dateOfBirth">
-                </div>
-                <div>
-                    <label for="gender">GENDER:</label>
-                    <select id="gender" name="gender">
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="family">RABBIT FAMILY:</label>
-                    <input type="text" id="family" name="family">
-                </div>
-                <div>
-                    <label>FOOD INTAKE:</label>
-                    <label><input type="radio" name="foodIntakeDoe" value="normal"> NORMAL</label>
-                    <label><input type="radio" name="foodIntakeDoe" value="irregular"> IRREGULAR</label>
-                </div>
-                <div>
-                    <label for="weight">WEIGHT:</label>
-                    <input type="text" id="weight" name="weight">
-                </div>
-                <div id="pregnantSection">
-                    <label>PREGNANT:</label>
-                    <label><input type="radio" name="pregnantDoe" value="yes" onclick="togglePregnancyDetails(true)"> YES</label>
-                    <label><input type="radio" name="pregnantDoe" value="no" onclick="togglePregnancyDetails(false)"> NO</label>
-                    <div id="pregnancyDetails" style="display: none;">
-                        <div>
-                            <label for="pregnancyStartDoe">START OF PREGNANCY:</label>
-                            <input type="date" id="pregnancyStartDoe" name="pregnancyStartDoe" onchange="calculateDueDate('Doe')">
-                        </div>
-                        <div>
-                            <label for="dueDateDoe">DUE DATE OF PREGNANCY:</label>
-                            <input type="text" id="dueDateDoe" name="dueDateDoe" readonly>
-                        </div>
-                    </div>
-                    <div id="notReadyMessage" style="display: none;">
-                        <p>This rabbit is not ready for pregnancy.</p>
-                    </div>
+                    <label for="dueDate">DUE DATE OF PREGNANCY:</label>
+                    <input type="date" id="dueDate" name="dueDate">
                 </div>
             </div>
 
-            <!-- Rabbit Fattener Section -->
-            <div id="fattenerSection" style="display: none;">
-                <div>
-                    <label for="serialNumberFattener">SERIAL NUMBER:</label>
-                    <input type="text" id="serialNumberFattener" name="serialNumberFattener">
-                </div>
-                <div>
-                    <label for="breeds">BREEDS:</label>
-                    <input type="text" id="breeds" name="breeds">
-                </div>
-                <div>
-                    <label for="ageFattener">AGE:</label>
-                    <input type="text" id="ageFattener" name="ageFattener">
-                </div>
-                <div>
-                    <label for="dateOfBirthFattener">DATE OF BIRTH:</label>
-                    <input type="date" id="dateOfBirthFattener" name="dateOfBirthFattener" onchange="checkMeatProduction()">
-                </div>
-                <div>
-                    <label for="genderFattener">GENDER:</label>
-                    <select id="genderFattener" name="genderFattener">
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="familyFattener">RABBIT FAMILY:</label>
-                    <input type="text" id="familyFattener" name="familyFattener">
-                </div>
-                <div>
-                    <label>FOOD INTAKE:</label>
-                    <label><input type="radio" name="foodIntakeFattener" value="normal"> NORMAL</label>
-                    <label><input type="radio" name="foodIntakeFattener" value="irregular"> IRREGULAR</label>
-                </div>
-                <div>
-                    <label for="weightFattener">WEIGHT:</label>
-                    <input type="text" id="weightFattener" name="weightFattener">
-                </div>
-                <div id="readyForMeat" style="display: none;">
-                    <p>This rabbit is ready for meat production.</p>
-                </div>
-                <div id="notReadyForMeat" style="display: none;">
-                    <p style="font-weight: bold; border: 2px solid black; padding: 5px;">This rabbit is not ready for meat production.</p>
-                </div>
+            <!-- Other Fields -->
+            <div>
+                <label for="foodIntake">FOOD INTAKE:</label>
+                <label><input type="radio" name="foodIntake" value="normal"> NORMAL</label>
+                <label><input type="radio" name="foodIntake" value="irregular"> IRREGULAR</label>
             </div>
-
-            <!-- Rabbit Breeder Section -->
-            <div id="breederSection" style="display: none;">
-                <div>
-                    <label for="serialNumberBreeder">SERIAL NUMBER:</label>
-                    <input type="text" id="serialNumberBreeder" name="serialNumberBreeder">
-                </div>
-                <div>
-                    <label for="breedsBreeder">BREEDS:</label>
-                    <input type="text" id="breedsBreeder" name="breedsBreeder">
-                </div>
-                <div>
-                    <label for="ageBreeder">AGE:</label>
-                    <input type="text" id="ageBreeder" name="ageBreeder">
-                </div>
-                <div>
-                    <label for="dateOfBirthBreeder">DATE OF BIRTH:</label>
-                    <input type="date" id="dateOfBirthBreeder" name="dateOfBirthBreeder" onchange="checkMatingEligibility()">
-                </div>
-                <div>
-                    <label for="genderBreeder">GENDER:</label>
-                    <select id="genderBreeder" name="genderBreeder">
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="familyBreeder">RABBIT FAMILY:</label>
-                    <input type="text" id="familyBreeder" name="familyBreeder">
-                </div>
-                <div>
-                    <label>FOOD INTAKE:</label>
-                    <label><input type="radio" name="foodIntakeBreeder" value="normal"> NORMAL</label>
-                    <label><input type="radio" name="foodIntakeBreeder" value="irregular"> IRREGULAR</label>
-                </div>
-                <div>
-                    <label for="weightBreeder">WEIGHT:</label>
-                    <input type="text" id="weightBreeder" name="weightBreeder">
-                </div>
-                <div id="matingEligibilityMessage" style="display: none;"></div>
+            <div>
+                <label>ELIGIBILITY OF MATING:</label>
+                <span id="matingEligibility"></span>
             </div>
-
             <div>
                 <label for="note">NOTE:</label>
                 <textarea id="note" name="note"></textarea>
             </div>
+
             <div class="buttons">
                 <button type="submit">SUBMIT</button>
-                <button type="button" onclick="clearForm()">CLEAR FORM</button>
                 <button type="button" onclick="goHome()">CANCEL</button>
-            </div>
-
-            <!-- Delete Cage Button Inside the Profile -->
-            <div class="buttons">
-                <button type="button" onclick="deleteCageData()">DELETE CAGE</button>
+                <button type="button" onclick="deleteCage()">CLEAR CAGE</button> <!-- Delete Cage Button -->
             </div>
         </form>
     </div>
 
-    <div id="home">
-        <h1>Welcome to Rabbit Farm</h1>
-        <button type="button" onclick="addCage()">ADD CAGE</button>
-        <div id="cageList"></div>
-    </div>
+    <script>
+        let totalCages = 6; // Keeps track of the total number of cages
 
-    <script src="script.js"></script>
+        function goHome() {
+            document.getElementById('homePage').style.display = 'block';
+            document.getElementById('cageDetails').style.display = 'none';
+            document.getElementById('pregnancyOption').style.display = 'none';
+            document.getElementById('pregnancyDetails').style.display = 'none';
+            document.getElementById('headerTitle').innerHTML = '<strong>RABBIT CAGE</strong>'; // Reset header title
+        }
+
+        function showCageDetails(cageNumber) {
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('cageDetails').style.display = 'block';
+            loadData(cageNumber);
+            document.getElementById('rabbitForm').dataset.cageNumber = cageNumber;
+            document.getElementById('headerTitle').innerHTML = `<strong>CAGE ${cageNumber}</strong>`;
+        }
+
+        function togglePregnancy(show) {
+            document.getElementById('pregnancyOption').style.display = show ? 'block' : 'none';
+            document.getElementById('pregnancyDetails').style.display = 'none'; // Hide pregnancy details if gender changes
+        }
+
+        function togglePregnancyDetails(show) {
+            document.getElementById('pregnancyDetails').style.display = show ? 'block' : 'none';
+        }
+
+        function saveData(event) {
+            event.preventDefault();
+            const form = document.getElementById('rabbitForm');
+            const cageNumber = form.dataset.cageNumber;
+            const data = new FormData(form);
+            const obj = {};
+            data.forEach((value, key) => {
+                obj[key] = value;
+            });
+            localStorage.setItem(`rabbitData${cageNumber}`, JSON.stringify(obj));
+            alert('Data saved successfully!');
+            goToRabbitProfile();
+        }
+
+        function checkMatingEligibility(birthDate) {
+            if (!birthDate) {
+                return "No Date of Birth Provided";
+            }
+
+            const birth = new Date(birthDate);
+            const today = new Date();
+            const diffInMonths = (today.getFullYear() - birth.getFullYear()) * 12 + (today.getMonth() - birth.getMonth());
+
+            if (diffInMonths >= 6) {
+                const nextEligibleDate = new Date(birth);
+                nextEligibleDate.setMonth(birth.getMonth() + 6);
+
+                if (diffInMonths % 3 === 0) {
+                    return "Eligible for Mating";
+                } else {
+                    return `Next eligible in ${3 - (diffInMonths % 3)} month(s)`;
+                }
+            } else {
+                return `Not Eligible (Eligible in ${6 - diffInMonths} month(s))`;
+            }
+        }
+
+        function loadData(cageNumber) {
+            let data = JSON.parse(localStorage.getItem(`rabbitData${cageNumber}`)) || {};
+            document.getElementById('serialNumber').value = data.serialNumber || '';
+            document.getElementById('breed').value = data.breed || '';
+            document.getElementById('family').value = data.family || '';
+            document.getElementById('birthDate').value = data.birthDate || '';
+            document.getElementById('weight').value = data.weight || '';
+            document.getElementById('rabbitType').value = data.rabbitType || '';
+            
+            if (data.gender === "female") {
+                document.querySelector('input[name="gender"][value="female"]').checked = true;
+                togglePregnancy(true);
+            } else {
+                document.querySelector('input[name="gender"][value="male"]').checked = true;
+                togglePregnancy(false);
+            }
+
+            if (data.pregnant === "yes") {
+                document.querySelector('input[name="pregnant"][value="yes"]').checked = true;
+                togglePregnancyDetails(true);
+            } else {
+                document.querySelector('input[name="pregnant"][value="no"]').checked = true;
+                togglePregnancyDetails(false);
+            }
+
+            document.getElementById('matedRabbit').value = data.matedRabbit || '';
+            document.getElementById('pregnancyStart').value = data.pregnancyStart || '';
+            document.getElementById('dueDate').value = data.dueDate || '';
+            document.querySelector(`input[name="foodIntake"][value="${data.foodIntake || 'normal'}"]`).checked = true;
+            document.getElementById('note').value = data.note || '';
+
+            const eligibilityMessage = checkMatingEligibility(data.birthDate);
+            document.getElementById('matingEligibility').innerText = eligibilityMessage;
+        }
+
+        function goToRabbitProfile() {
+            const cageNumber = document.getElementById('rabbitForm').dataset.cageNumber || 1;
+            const form = document.getElementById('rabbitForm');
+            const data = new FormData(form);
+            const params = new URLSearchParams();
+            data.forEach((value, key) => {
+                params.append(key, value);
+            });
+            window.location.href = `rabbitinfo.html?cage=${cageNumber}&${params.toString()}`;
+        }
+
+        // New function to delete cage data
+        function deleteCage() {
+            const cageNumber = document.getElementById('rabbitForm').dataset.cageNumber;
+            if (confirm(`Are you sure you want to delete data for Cage ${cageNumber}?`)) {
+                localStorage.removeItem(`rabbitData${cageNumber}`);
+                alert(`Data for Cage ${cageNumber} has been deleted.`);
+                goHome();
+            }
+        }
+
+        // New function to add a new cage
+        function addNewCage() {
+            totalCages++;
+            const homePage = document.getElementById('homePage');
+            const newCageButton = document.createElement('button');
+            newCageButton.textContent = `CAGE ${totalCages}`;
+            newCageButton.onclick = () => showCageDetails(totalCages);
+            homePage.insertBefore(newCageButton, homePage.lastElementChild);
+        }
+
+        window.onload = function () {
+            let cageNumber = new URLSearchParams(window.location.search).get('cage');
+            if (cageNumber) {
+                showCageDetails(cageNumber);
+            } else {
+                goHome();
+            }
+        }
+    </script>
 </body>
 </html>
