@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rabbit Farm</title>
-    <style>
-        /* General styling */
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Rabbit Profile</title>
+      <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
@@ -19,230 +18,141 @@
             background-image: url('https://tinyurl.com/2ybmu2yr');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
-            padding-top: 70px;
         }
 
-        /* Header styling */
         header {
-            background-color: rgba(76, 175, 80, 0.9);
+            background: linear-gradient(135deg, #6dd5ed, #4CAF50);
             color: white;
-            padding: 20px 45px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            border-radius: 8px;
+            padding: 20px 50px;
+            text-align: center;
+            width: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 15px; 
             position: relative;
-            z-index: 1000;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            font-size: 40px; 
+            letter-spacing: 1px; 
+            text-transform: uppercase; 
         }
-
+        
+        header #headerTitle {
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
         header button {
             background: none;
             border: none;
             color: white;
             font-size: 1.5em;
             cursor: pointer;
-            outline: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            transition: transform 0.3s ease-in-out; 
         }
-
+        
         header button:hover {
-            color: #FFD700;
-            background-color: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
+            transform: scale(1.1); 
         }
 
-        #headerTitle {
-            font-size: 1.5em;
-            font-weight: bold;
+        .profile-card {
+            max-width: 400px;
+            background-color: #fff;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
             text-align: center;
         }
 
-        /* Sidebar styling */
-        .sidebar {
-            position: fixed;
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            cursor: pointer; 
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-details {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .profile-details p {
+            margin: 8px 0;
+        }
+
+        .profile-details .label {
+            font-weight: bold; 
+        }
+
+        .edit-details {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
             left: 0;
             top: 0;
-            width: 200px;
-            height: 100%;
-            background-color: #4CAF50;
-            color: white;
-            padding-top: 60px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgb(0,0,0); 
+            background-color: rgba(0,0,0,0.4); 
         }
 
-        .sidebar a {
-            color: white;
-            padding: 15px;
-            text-decoration: none;
-            display: block;
-            text-align: center;
-            transition: background-color 0.3s ease;
-        }
-
-        .sidebar a:hover {
-            background-color: #45a049;
-        }
-
-        /* Navbar styling */
-        .navbar {
-            width: calc(100% - 200px);
-            background-color: #333;
-            overflow: hidden;
-            position: fixed;
-            top: 0;
-            left: 200px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .navbar a {
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 20px;
-            text-decoration: none;
-        }
-
-        .navbar a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-
-        /* Home page styling */
-        .cage-list-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%; /* Full height of the container to center vertically */
-            width: 100%;
-        }
-
-        .cage-list {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 15px;
-            width: 100%;
-            max-width: 300px;
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; 
             padding: 20px;
+            border: 1px solid #888;
+            width: 80%; 
         }
 
-        .cage-list button {
-            background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent background */
-            color: #333;
-            border: 2px solid #4CAF50;
-            padding: 10px;
-            cursor: pointer;
-            border-radius: 50px;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            font-size: 1.2em;
-            width: 100%;
-            text-align: center;
-            margin: 10px 0;
-        }
-
-        .cage-list button:hover {
-            background-color: #4CAF50;
-            color: white;
-        }
-
-        /* Cage details form styling */
-        #cageDetails {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding-top: 20px;
-        }
-
-        form {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Updated shadow */
-            width: 80%;
-            max-width: 600px; /* Updated max-width */
-            display: flex;
-            flex-direction: column;
-            margin-top: 10px;
-        }
-
-        form div {
-            margin-bottom: 15px;
-        }
-
-        form label {
-            display: block;
-            margin-bottom: 5px;
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
             font-weight: bold;
-            color: #555;
         }
 
-        form input[type="text"],
-        form input[type="date"],
-        form textarea {
-            width: calc(100% - 10px);
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        form input[type="radio"] {
-            margin-right: 5px;
-        }
-
-        form .buttons {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        form .buttons button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px;
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
             cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
         }
 
-        form .buttons button:hover {
-            background-color: #45a049;
+        #gender {
+            text-transform: capitalize; 
         }
 
-        form .buttons button[type="button"] {
-            background-color: #f44336;
+        #rabbit-type {
+            text-transform: capitalize;
         }
 
-        form .buttons button[type="button"]:hover {
-            background-color: #e53935;
-        }
-
-        /* Responsive styling */
         @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                padding-top: 20px;
-            }
-
-            .navbar {
-                width: 100%;
-                left: 0;
-                height: auto;
-            }
-
             .cage-list {
-                width: 90%;
-                max-width: none;
+                flex-direction: column;
             }
 
             form {
@@ -270,110 +180,8 @@
             }
         }
     </style>
-    </head>
+</head>
 <body>
-    <header>
-        <button onclick="goHome()">&#x1F3E0;</button> 
-        <span id="headerTitle">Rabbit Cage</span>
-        <button onclick="goToRabbitProfile()">&#x1F407;</button>
-    </header>
-
-    <div id="cageDetails">
-        <form id="rabbitForm" onsubmit="saveData(event)">
-            <div>
-                <label for="serialNumber">SERIAL NUMBER:</label>
-                <input type="text" id="serialNumber" name="serialNumber" required>
-            </div>
-            <div>
-                <label for="breed">BREED:</label>
-                <input type="text" id="breed" name="breed">
-            </div>
-            <div>
-                <label for="family">FAMILY:</label>
-                <input type="text" id="family" name="family">
-            </div>
-            <div>
-                <label for="birthDate">DATE OF BIRTH:</label>
-                <input type="date" id="birthDate" name="birthDate">
-            </div>
-            <div>
-                <label for="weight">WEIGHT:</label>
-                <input type="text" id="weight" name="weight">
-            </div>
-
-            <div>
-                <label for="rabbitType">RABBIT TYPE:</label>
-                <select id="rabbitType" name="rabbitType" required>
-                    <option value="">--Select Type--</option>
-                    <option value="fattener">Fattener</option>
-                    <option value="doe">Doe</option>
-                    <option value="breeder">Breeder</option>
-                </select>
-            </div>
-
-            <!-- Gender Section -->
-            <div>
-                <label for="gender">GENDER:</label>
-                <label><input type="radio" name="gender" value="male" onclick="togglePregnancy(false)"> MALE</label>
-                <label><input type="radio" name="gender" value="female" onclick="togglePregnancy(true)"> FEMALE</label>
-            </div>
-
-            <!-- Pregnant Option (only for Female) -->
-            <div id="pregnancyOption" style="display: none;">
-                <label>PREGNANT:</label>
-                <label><input type="radio" name="pregnant" value="yes" onclick="togglePregnancyDetails(true)"> YES</label>
-                <label><input type="radio" name="pregnant" value="no" onclick="togglePregnancyDetails(false)"> NO</label>
-            </div>
-
-            <!-- Pregnancy Details (shown if Pregnant is Yes) -->
-            <div id="pregnancyDetails" style="display: none;">
-                <div>
-                    <label for="matedRabbit">MATED RABBIT:</label>
-                    <input type="text" id="matedRabbit" name="matedRabbit">
-                </div>
-                <div>
-                    <label for="pregnancyStart">START OF PREGNANCY:</label>
-                    <input type="date" id="pregnancyStart" name="pregnancyStart">
-                </div>
-                <div>
-                    <label for="dueDate">DUE DATE OF PREGNANCY:</label>
-                    <input type="date" id="dueDate" name="dueDate">
-                </div>
-            </div>
-
-            <!-- Other Fields -->
-            <div>
-                <label for="foodIntake">FOOD INTAKE:</label>
-                <label><input type="radio" name="foodIntake" value="normal"> NORMAL</label>
-                <label><input type="radio" name="foodIntake" value="irregular"> IRREGULAR</label>
-            </div>
-            <div>
-                <label>ELIGIBILITY OF MATING:</label>
-                <span id="matingEligibility"></span>
-            </div>
-            <div>
-                <label for="note">NOTE:</label>
-                <textarea id="note" name="note"></textarea>
-            </div>
-
-            <div class="buttons">
-                <button type="submit">SUBMIT</button>
-                <button type="button" onclick="goHome()">CANCEL</button>
-                <button type="button" onclick="deleteCage()">CLEAR CAGE</button> <!-- Delete Cage Button -->
-            </div>
-        </form>
-    </div>
-
-    <div id="homePage" class="cage-list" style="display: none;">
-        <button onclick="showCageDetails(1)">CAGE 1</button>
-        <button onclick="showCageDetails(2)">CAGE 2</button>
-        <button onclick="showCageDetails(3)">CAGE 3</button>
-        <button onclick="showCageDetails(4)">CAGE 4</button>
-        <button onclick="showCageDetails(5)">CAGE 5</button>
-        <button onclick="showCageDetails(6)">CAGE 6</button>
-        <button onclick="addNewCage()">ADD NEW CAGE</button> <!-- Add New Cage Button -->
-    </div>
-    
     <header> 
         <span id="headerTitle">RABBIT PROFILE</span>
     </header>
@@ -397,11 +205,10 @@
             <p><span class="label">Eligibility for Mating:</span> <span id="mating">Unknown</span></p>
         </div>
         <div>
-            <a href="https://jackdialogo.github.io/New/index.html?cage=1" class="edit-details" id="edit-link">Edit Details</a>
+            <a href="/edit"><button>Edit Details</button></a>
         </div>
     </div>
 
-    <!-- Modal for uploading a new picture -->
     <div id="uploadModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeUploadPrompt()">&times;</span>
@@ -410,195 +217,72 @@
             <button onclick="changeProfilePicture()">Upload</button>
         </div>
     </div>
-    
-    <script>
-    let totalCages = 6; // Keeps track of the total number of cages
 
-    function goHome() {
-        document.getElementById('homePage').style.display = 'block';
-        document.getElementById('cageDetails').style.display = 'none';
-        document.getElementById('pregnancyOption').style.display = 'none';
-        document.getElementById('pregnancyDetails').style.display = 'none';
-        document.getElementById('headerTitle').innerHTML = '<strong>RABBIT CAGE</strong>'; // Reset header title
-    }
+<script>
+    let webSocket;
+    let cageNumber;
 
-    function showCageDetails(cageNumber) {
-        document.getElementById('homePage').style.display = 'none';
-        document.getElementById('cageDetails').style.display = 'block';
-        loadData(cageNumber);
-        document.getElementById('rabbitForm').dataset.cageNumber = cageNumber;
-        document.getElementById('headerTitle').innerHTML = `<strong>CAGE ${cageNumber}</strong>`;
-    }
+    window.onload = function() {
+        const params = new URLSearchParams(window.location.search);
+        cageNumber = params.get('cage') || '1';
 
-    function togglePregnancy(show) {
-        document.getElementById('pregnancyOption').style.display = show ? 'block' : 'none';
-        document.getElementById('pregnancyDetails').style.display = 'none'; // Hide pregnancy details if gender changes
-    }
+        const data = JSON.parse(localStorage.getItem(`rabbitData${cageNumber}`)) || {};
 
-    function togglePregnancyDetails(show) {
-        document.getElementById('pregnancyDetails').style.display = show ? 'block' : 'none';
-    }
+        document.getElementById('breed').innerText = data.breed || 'Unknown';
+        document.getElementById('serial-no').innerText = data.serialNumber || '';
+        document.getElementById('cage-no').innerText = cageNumber;
+        document.getElementById('age').innerText = calculateAge(data.birthDate) || '';
+        document.getElementById('gender').innerText = data.gender || 'Unknown';
+        document.getElementById('weight').innerText = data.weight || 'Unknown';
+        document.getElementById('family').innerText = data.family || 'Unknown';
+        document.getElementById('food-intake').innerText = data.foodIntake === "normal" ? "Normal" : "Irregular";
+        document.getElementById('pregnancy-start').innerText = data.pregnancyStart || '';
+        document.getElementById('pregnancy-due').innerText = data.dueDate || '';
+        document.getElementById('mating').innerText = data.matingEligibility || '';
+        document.getElementById('rabbit-type').innerText = data.rabbitType || 'Unknown';
 
-    function saveData(event) {
-        event.preventDefault();
-        const form = document.getElementById('rabbitForm');
-        const cageNumber = form.dataset.cageNumber;
-        const data = new FormData(form);
-        const obj = {};
-        data.forEach((value, key) => {
-            obj[key] = value;
-        });
-        localStorage.setItem(`rabbitData${cageNumber}`, JSON.stringify(obj));
-        alert('Data saved successfully!');
-        goToRabbitProfile();
-    }
+        const profileImg = document.getElementById('profileImg');
+        profileImg.src = data.profilePicture || '';
 
-    function checkMatingEligibility(birthDate) {
-        if (!birthDate) {
-            return "No Date of Birth Provided";
-        }
+        connectWebSocket();
+    };
 
-        const birth = new Date(birthDate);
-        const today = new Date();
-        const diffInMonths = (today.getFullYear() - birth.getFullYear()) * 12 + (today.getMonth() - birth.getMonth());
+    function connectWebSocket() {
+        webSocket = new WebSocket('ws://your-websocket-url');
 
-        if (diffInMonths >= 6) {
-            const nextEligibleDate = new Date(birth);
-            nextEligibleDate.setMonth(birth.getMonth() + 6);
+        webSocket.onmessage = function(event) {
+            const message = JSON.parse(event.data);
+            if (message.type === 'update' && message.cageNumber === cageNumber) {
+                const data = message.data;
+                document.getElementById('breed').innerText = data.breed || 'Unknown';
+                document.getElementById('serial-no').innerText = data.serialNumber || '';
+                document.getElementById('age').innerText = calculateAge(data.birthDate) || '';
+                document.getElementById('gender').innerText = data.gender || 'Unknown';
+                document.getElementById('weight').innerText = data.weight || 'Unknown';
+                document.getElementById('family').innerText = data.family || 'Unknown';
+                document.getElementById('food-intake').innerText = data.foodIntake === "normal" ? "Normal" : "Irregular";
+                document.getElementById('pregnancy-start').innerText = data.pregnancyStart || '';
+                document.getElementById('pregnancy-due').innerText = data.dueDate || '';
+                document.getElementById('mating').innerText = data.matingEligibility || '';
+                document.getElementById('rabbit-type').innerText = data.rabbitType || 'Unknown';
 
-            if (diffInMonths % 3 === 0) {
-                return "Eligible for Mating";
-            } else {
-                return `Next eligible in ${3 - (diffInMonths % 3)} month(s)`;
+                if (data.profilePicture) {
+                    document.getElementById('profileImg').src = data.profilePicture;
+                }
             }
-        } else {
-            return `Not Eligible (Eligible in ${6 - diffInMonths} month(s))`;
-        }
-    }
+        };
 
-    function loadData(cageNumber) {
-        let data = JSON.parse(localStorage.getItem(`rabbitData${cageNumber}`)) || {};
-        document.getElementById('serialNumber').value = data.serialNumber || '';
-        document.getElementById('breed').value = data.breed || '';
-        document.getElementById('family').value = data.family || '';
-        document.getElementById('birthDate').value = data.birthDate || '';
-        document.getElementById('weight').value = data.weight || '';
-        document.getElementById('rabbitType').value = data.rabbitType || '';
-        
-        if (data.gender === "female") {
-            document.querySelector('input[name="gender"][value="female"]').checked = true;
-            togglePregnancy(true);
-        } else {
-            document.querySelector('input[name="gender"][value="male"]').checked = true;
-            togglePregnancy(false);
-        }
+        webSocket.onopen = function() {
+            console.log('WebSocket connection opened.');
+        };
 
-        if (data.pregnant === "yes") {
-            document.querySelector('input[name="pregnant"][value="yes"]').checked = true;
-            togglePregnancyDetails(true);
-        } else {
-            document.querySelector('input[name="pregnant"][value="no"]').checked = true;
-            togglePregnancyDetails(false);
-        }
+        webSocket.onerror = function(error) {
+            console.error('WebSocket error:', error);
+        };
 
-        document.getElementById('matedRabbit').value = data.matedRabbit || '';
-        document.getElementById('pregnancyStart').value = data.pregnancyStart || '';
-        document.getElementById('dueDate').value = data.dueDate || '';
-        document.querySelector(`input[name="foodIntake"][value="${data.foodIntake || 'normal'}"]`).checked = true;
-        document.getElementById('note').value = data.note || '';
-
-        const eligibilityMessage = checkMatingEligibility(data.birthDate);
-        document.getElementById('matingEligibility').innerText = eligibilityMessage;
-    }
-
-    function goToRabbitProfile() {
-    // Logic to display rabbit profile
-    document.getElementById('cageDetails').style.display = 'none';
-    document.getElementById('homePage').style.display = 'none';
-    document.getElementById('pregnancyOption').style.display = 'none';
-    document.getElementById('pregnancyDetails').style.display = 'block'; // Assuming this is where the profile shows
-    document.getElementById('headerTitle').innerHTML = '<strong>RABBIT PROFILE</strong>'; // Update header title
-}
-
-    
-    function deleteCage() {
-    const cageNumber = document.getElementById('rabbitForm').dataset.cageNumber;
-    console.log(`Attempting to delete data for Cage ${cageNumber}`);
-
-    if (confirm(`Are you sure you want to delete data for Cage ${cageNumber}?`)) {
-        // Remove from localStorage
-        localStorage.removeItem(`rabbitData${cageNumber}`);
-        
-        // Find and remove the corresponding button for the cage
-        const cageButton = document.querySelector(`#homePage button[onclick="showCageDetails(${cageNumber})"]`);
-        console.log(cageButton); // Check if the button is found
-        if (cageButton) {
-            cageButton.remove();  
-            alert(`Data for Cage ${cageNumber} has been deleted.`);
-        } else {
-            alert(`No button found for Cage ${cageNumber}.`);
-        }
-        
-        goHome();
-    }
-}
-
-
-    // New function to add a new cage
-    function addNewCage() {
-        totalCages++;
-        const homePage = document.getElementById('homePage');
-        const newCageButton = document.createElement('button');
-        newCageButton.textContent = `CAGE ${totalCages}`;
-        newCageButton.onclick = () => showCageDetails(totalCages);
-        homePage.insertBefore(newCageButton, homePage.lastElementChild);
-    }
-
-    function handleCageInput (){
-      let cageNumber = document.getElementById('cageInput').value;
-      if (cageNumber) {
-        showCageDetails(cageNumber);
-      } else {
-          goHome();  
-      
-      }
-    }
-
-    function getCageNumberFromLocalData(){
-      return localStorage.getItem('cageNumber');
-    }
-    
-        function showRabbitDetails(rabbitData){
-          // use the rabbitData object to display the profile 
-          
-          console.log('Cage Number:', rabbitData.cageNumber);
-          console.log('Other Form Data:', rabbitData);
-        }
-            
-
-           // Load rabbit data from localStorage
-    const data = JSON.parse(localStorage.getItem(`rabbitData${cageNumber}`)) || {};
-
-    // Update profile details
-    document.getElementById('breed').innerText = data.breed || 'Unknown';
-    document.getElementById('serial-no').innerText = data.serialNumber || '';
-    document.getElementById('cage-no').innerText = cageNumber;
-    document.getElementById('age').innerText = calculateAge(data.birthDate) || '';
-    document.getElementById('gender').innerText = data.gender || 'Unknown';
-    document.getElementById('weight').innerText = data.weight || 'Unknown';
-    document.getElementById('family').innerText = data.family || 'Unknown';
-    document.getElementById('food-intake').innerText = data.foodIntake === "normal" ? "Normal" : "Irregular";
-    document.getElementById('pregnancy-start').innerText = data.pregnancyStart || '';
-    document.getElementById('pregnancy-due').innerText = data.dueDate || '';
-    document.getElementById('mating').innerText = data.matingEligibility || '';
-    document.getElementById('rabbit-type').innerText = data.rabbitType || 'Unknown';
-
-    // Set profile image if available
-    const profileImg = document.getElementById('profileImg');
-    if (data.profilePicture) {
-        profileImg.src = data.profilePicture;
-    } else {
-        profileImg.src = 'https://tinyurl.com/2ybmu2yr'; // default image
+        webSocket.onclose = function() {
+            console.log('WebSocket connection closed.');
+        };
     }
 
         function showUploadPrompt() {
@@ -620,10 +304,10 @@
                 const reader = new FileReader();
 
                 reader.onload = function(e) {
-                    profileImg.src = e.target.result; // Update image source
+                    profileImg.src = e.target.result; 
 
                     const data = JSON.parse(localStorage.getItem(`rabbitData${cageNumber}`)) || {};
-                    localStorage.setItem(`rabbitData${cageNumber}`, JSON.stringify({ ...data, profilePicture: e.target.result })); // Save to localStorage
+                    localStorage.setItem(`rabbitData${cageNumber}`, JSON.stringify({ ...data, profilePicture: e.target.result })); 
                 };
                 reader.readAsDataURL(file);
                 closeUploadPrompt(); // Close the modal
@@ -669,38 +353,21 @@
             const ageInMilliseconds = today - birth;
             const ageInDays = Math.floor(ageInMilliseconds / (1000 * 60 * 60 * 24)); // Age in days
             
-            // If age is less than 30 days, return in days
             if (ageInDays < 30) {
                 return `${ageInDays} day(s)`;
             }
             
-            // Otherwise, calculate age in months
-            const ageInMonths = Math.floor(ageInDays / 30); // Approximate months
+            const ageInMonths = Math.floor(ageInDays / 30); 
             return `${ageInMonths} month(s)`;
         }
 
-        // Click outside modal to close it
         window.onclick = function(event) {
             const modal = document.getElementById('uploadModal');
             if (event.target == modal) {
                 closeUploadPrompt();
             }
         }
-        
-        window.onload = function (){
-          let cageNumber = getCageNumberFromLocalData();
-          if (cageNumber) {
-            showCageDetails(cageNumber);
-          } else {
-              goHome(); 
-          }
-          
-          const rabbitData = JSON.parse(localStorage.getItem('rabbitProfile'));
-          if (rabbitData) {
-          } else {
-              goHome();  
-          }
-          };
-    </script>
-</body>
-</html>
+      window.addEventListener('load', connectWebSocket);
+      </script>
+    </body>
+    </html>
